@@ -141,6 +141,10 @@ button:hover{
 <header>
     <h2>KyroChat</h2>
     <div id="info"></div>
+
+<button onclick="changeName()">
+Change Name
+</button>
 </header>
 
 <div id="friends"></div>
@@ -232,6 +236,22 @@ let friends = JSON.parse(
 ) || [];
 
 function renderFriends(){
+    function changeName(){
+
+    let newName = prompt("Enter new username:");
+
+    if(!newName) return;
+
+    username = newName;
+
+    localStorage.setItem("kyro_name", username);
+
+    document.getElementById("info").innerHTML =
+    `
+    ${username}<br>
+    ${myID}
+    `;
+}
 
     friendsDiv.innerHTML = "";
 
