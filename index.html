@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>KyroChat</title>
+<title>KyroChat V3</title>
 
 <!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
@@ -27,6 +27,8 @@ body{
     display:flex;
     flex-direction:column;
 }
+
+/* HEADER */
 
 header{
     background:#202c33;
@@ -57,12 +59,22 @@ header{
     font-weight:bold;
 }
 
+/* HOME INFO */
+
 #chatName{
     background:#111b21;
-    padding:10px;
+    padding:12px;
     border-bottom:1px solid #2f3b43;
     font-size:14px;
+    line-height:1.6;
 }
+
+#myIDText{
+    color:#00a884;
+    font-size:13px;
+}
+
+/* CHAT */
 
 #chat{
     flex:1;
@@ -96,6 +108,8 @@ header{
     margin-bottom:5px;
 }
 
+/* INPUT */
+
 #bottom{
     display:flex;
     gap:5px;
@@ -121,7 +135,7 @@ header{
     cursor:pointer;
 }
 
-/* Sidebar */
+/* SIDEBAR */
 
 #sidebar{
     position:fixed;
@@ -179,7 +193,7 @@ header{
     right:14px;
 }
 
-/* Settings */
+/* SETTINGS */
 
 #settingsMenu{
     position:fixed;
@@ -208,7 +222,7 @@ header{
 
 <body>
 
-<!-- Sidebar -->
+<!-- SIDEBAR -->
 
 <div id="sidebar">
 
@@ -234,7 +248,7 @@ header{
 
 </div>
 
-<!-- Settings -->
+<!-- SETTINGS -->
 
 <div id="settingsMenu">
 
@@ -254,6 +268,13 @@ header{
 
     <div
         class="settingItem"
+        onclick="copyMyID()"
+    >
+        Copy My ID
+    </div>
+
+    <div
+        class="settingItem"
         onclick="clearLocalChats()"
     >
         Clear Local Chats
@@ -261,7 +282,7 @@ header{
 
 </div>
 
-<!-- Header -->
+<!-- HEADER -->
 
 <header>
 
@@ -283,17 +304,32 @@ header{
 
 </header>
 
-<!-- Chat Name -->
+<!-- HOME INFO -->
 
 <div id="chatName">
+
     Open ☰ and select a contact
+
+    <br><br>
+
+    <span style="
+    font-size:12px;
+    opacity:0.7;
+    ">
+        Your ID:
+    </span>
+
+    <br>
+
+    <span id="myIDText"></span>
+
 </div>
 
-<!-- Chat -->
+<!-- CHAT -->
 
 <div id="chat"></div>
 
-<!-- Bottom -->
+<!-- INPUT -->
 
 <div id="bottom">
 
@@ -375,6 +411,12 @@ if(!username){
         username
     );
 }
+
+
+// SHOW ID
+document
+.getElementById("myIDText")
+.innerText = myID;
 
 
 // =======================
@@ -574,8 +616,25 @@ function renderContacts(){
                     contact.id
                 ){
 
-                    chatName.innerText =
-                    newName;
+                    chatName.innerHTML =
+                    `
+                    ${newName}
+
+                    <br><br>
+
+                    <span style="
+                    font-size:12px;
+                    opacity:0.7;
+                    ">
+                        Your ID:
+                    </span>
+
+                    <br>
+
+                    <span id="myIDText">
+                        ${myID}
+                    </span>
+                    `;
                 }
             }
         };
@@ -595,8 +654,25 @@ function openChat(id,name){
 
     chat.innerHTML = "";
 
-    chatName.innerText =
-    name;
+    chatName.innerHTML =
+    `
+    ${name}
+
+    <br><br>
+
+    <span style="
+    font-size:12px;
+    opacity:0.7;
+    ">
+        Your ID:
+    </span>
+
+    <br>
+
+    <span id="myIDText">
+        ${myID}
+    </span>
+    `;
 
     if(!localChats[id]){
 
@@ -713,7 +789,7 @@ function addContact(){
 
 
 // =======================
-// CREATE GROUP
+// GROUPS
 // =======================
 
 function createGroup(){
@@ -833,7 +909,7 @@ db.ref(
     true;
 
 
-    // save local
+    // local save
     if(
         !localChats[data.senderID]
     ){
@@ -859,7 +935,7 @@ db.ref(
     saveAll();
 
 
-    // if chat open
+    // if active
     if(
         activeChat ===
         data.senderID
@@ -886,7 +962,7 @@ db.ref(
     renderContacts();
 
 
-    // delete relay msg
+    // delete relay
     snapshot.ref.remove();
 });
 
@@ -921,6 +997,17 @@ function showMyID(){
     alert(
         "Your ID:\n\n" +
         myID
+    );
+}
+
+function copyMyID(){
+
+    navigator.clipboard.writeText(
+        myID
+    );
+
+    alert(
+        "ID copied!"
     );
 }
 
