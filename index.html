@@ -41,6 +41,16 @@ header h2{
 #info{
     font-size:12px;
     opacity:0.8;
+    margin-bottom:10px;
+}
+
+header button{
+    border:none;
+    background:#00a884;
+    color:white;
+    padding:8px 12px;
+    border-radius:8px;
+    cursor:pointer;
 }
 
 #friends{
@@ -140,11 +150,12 @@ button:hover{
 
 <header>
     <h2>KyroChat</h2>
+
     <div id="info"></div>
 
-<button onclick="changeName()">
-Change Name
-</button>
+    <button id="changeBtn">
+        Change Name
+    </button>
 </header>
 
 <div id="friends"></div>
@@ -152,9 +163,21 @@ Change Name
 <div id="chat"></div>
 
 <div id="bottom">
-    <input id="target" placeholder="Friend ID">
-    <input id="message" placeholder="Type message...">
-    <button onclick="sendMsg()">Send</button>
+
+    <input
+        id="target"
+        placeholder="Friend ID"
+    >
+
+    <input
+        id="message"
+        placeholder="Type message..."
+    >
+
+    <button onclick="sendMsg()">
+        Send
+    </button>
+
 </div>
 
 <script>
@@ -187,9 +210,16 @@ let myID = localStorage.getItem("kyro_id");
 
 if(!myID){
 
-    myID = "ID-" + Math.random().toString(36).substring(2,10);
+    myID =
+    "ID-" +
+    Math.random()
+    .toString(36)
+    .substring(2,10);
 
-    localStorage.setItem("kyro_id", myID);
+    localStorage.setItem(
+        "kyro_id",
+        myID
+    );
 }
 
 
@@ -197,13 +227,17 @@ if(!myID){
 // Username
 // =======================
 
-let username = localStorage.getItem("kyro_name");
+let username =
+localStorage.getItem("kyro_name");
 
 if(!username){
 
     username = prompt("Enter username:");
 
-    localStorage.setItem("kyro_name", username);
+    localStorage.setItem(
+        "kyro_name",
+        username
+    );
 }
 
 
@@ -211,53 +245,78 @@ if(!username){
 // Show Profile
 // =======================
 
-document.getElementById("info").innerHTML =
-`
-${username}<br>
-${myID}
-`;
+function updateProfile(){
 
-
-// =======================
-// Elements
-// =======================
-
-const chat = document.getElementById("chat");
-
-const friendsDiv = document.getElementById("friends");
-
-
-// =======================
-// Friend System
-// =======================
-
-let friends = JSON.parse(
-    localStorage.getItem("kyro_friends")
-) || [];
-
-function renderFriends(){
-    function changeName(){
-
-    let newName = prompt("Enter new username:");
-
-    if(!newName) return;
-
-    username = newName;
-
-    localStorage.setItem("kyro_name", username);
-
-    document.getElementById("info").innerHTML =
+    document.getElementById("info")
+    .innerHTML =
     `
     ${username}<br>
     ${myID}
     `;
 }
 
+updateProfile();
+
+
+// =======================
+// Change Username
+// =======================
+
+function changeName(){
+
+    let newName =
+    prompt("Enter new username:");
+
+    if(!newName) return;
+
+    username = newName;
+
+    localStorage.setItem(
+        "kyro_name",
+        username
+    );
+
+    updateProfile();
+}
+
+document
+.getElementById("changeBtn")
+.addEventListener(
+    "click",
+    changeName
+);
+
+
+// =======================
+// Elements
+// =======================
+
+const chat =
+document.getElementById("chat");
+
+const friendsDiv =
+document.getElementById("friends");
+
+
+// =======================
+// Friend System
+// =======================
+
+let friends =
+JSON.parse(
+    localStorage.getItem(
+        "kyro_friends"
+    )
+) || [];
+
+function renderFriends(){
+
     friendsDiv.innerHTML = "";
 
     friends.forEach(friend => {
 
-        const div = document.createElement("div");
+        const div =
+        document.createElement("div");
 
         div.className = "friend";
 
@@ -265,8 +324,9 @@ function renderFriends(){
 
         div.onclick = () => {
 
-            document.getElementById("target").value =
-            friend.id;
+            document
+            .getElementById("target")
+            .value = friend.id;
         };
 
         friendsDiv.appendChild(div);
@@ -282,18 +342,26 @@ renderFriends();
 
 function addMessage(type, sender, text){
 
-    const div = document.createElement("div");
+    const div =
+    document.createElement("div");
 
-    div.className = "msg " + type;
+    div.className =
+    "msg " + type;
 
     div.innerHTML = `
-        <div class="sender">${sender}</div>
-        <div>${text}</div>
+        <div class="sender">
+            ${sender}
+        </div>
+
+        <div>
+            ${text}
+        </div>
     `;
 
     chat.appendChild(div);
 
-    chat.scrollTop = chat.scrollHeight;
+    chat.scrollTop =
+    chat.scrollHeight;
 }
 
 
@@ -304,32 +372,49 @@ function addMessage(type, sender, text){
 function sendMsg(){
 
     const target =
-    document.getElementById("target").value.trim();
+    document
+    .getElementById("target")
+    .value
+    .trim();
 
     const text =
-    document.getElementById("message").value.trim();
+    document
+    .getElementById("message")
+    .value
+    .trim();
 
     if(!target || !text) return;
 
 
-    // Auto save friend
-    let exists = friends.find(f => f.id === target);
+    // Save friend automatically
+    let exists =
+    friends.find(
+        f => f.id === target
+    );
 
     if(!exists){
 
         let friendName =
-        prompt("Save this friend as:");
+        prompt(
+            "Save this friend as:"
+        );
 
         if(friendName){
 
             friends.push({
+
                 name: friendName,
+
                 id: target
             });
 
             localStorage.setItem(
+
                 "kyro_friends",
-                JSON.stringify(friends)
+
+                JSON.stringify(
+                    friends
+                )
             );
 
             renderFriends();
@@ -338,7 +423,9 @@ function sendMsg(){
 
 
     // Send message
-    db.ref("messages/" + target).push({
+    db.ref(
+        "messages/" + target
+    ).push({
 
         sender: username,
 
@@ -350,9 +437,16 @@ function sendMsg(){
     });
 
 
-    addMessage("me", "You", text);
+    // Add locally
+    addMessage(
+        "me",
+        "You",
+        text
+    );
 
-    document.getElementById("message").value = "";
+    document
+    .getElementById("message")
+    .value = "";
 }
 
 
@@ -360,15 +454,22 @@ function sendMsg(){
 // Receive Messages
 // =======================
 
-db.ref("messages/" + myID)
-.on("child_added", snapshot => {
+db.ref(
+    "messages/" + myID
+)
+.on(
+    "child_added",
+    snapshot => {
 
-    const data = snapshot.val();
+    const data =
+    snapshot.val();
 
 
-    // Auto add sender to friends
+    // Auto add sender
     let exists =
-    friends.find(f => f.id === data.senderID);
+    friends.find(
+        f => f.id === data.senderID
+    );
 
     if(!exists){
 
@@ -383,7 +484,9 @@ db.ref("messages/" + myID)
 
             "kyro_friends",
 
-            JSON.stringify(friends)
+            JSON.stringify(
+                friends
+            )
         );
 
         renderFriends();
@@ -396,7 +499,9 @@ db.ref("messages/" + myID)
         "other",
 
         data.sender +
-        " (" + data.senderID + ")",
+        " (" +
+        data.senderID +
+        ")",
 
         data.text
     );
