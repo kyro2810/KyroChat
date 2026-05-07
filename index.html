@@ -6,7 +6,6 @@
 
 <title>KyroChat</title>
 
-<!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
 
@@ -34,14 +33,10 @@ header{
     border-bottom:1px solid #2f3b43;
 }
 
-header h2{
-    margin-bottom:5px;
-}
-
 #info{
     font-size:12px;
     opacity:0.8;
-    margin-bottom:10px;
+    margin:8px 0;
 }
 
 header button{
@@ -68,11 +63,22 @@ header button{
     border-radius:8px;
     cursor:pointer;
     white-space:nowrap;
-    transition:0.2s;
+    position:relative;
+    user-select:none;
 }
 
 .friend:hover{
     background:#2a3942;
+}
+
+.dot{
+    width:10px;
+    height:10px;
+    background:red;
+    border-radius:50%;
+    position:absolute;
+    top:4px;
+    right:4px;
 }
 
 #chat{
@@ -139,16 +145,13 @@ button{
     cursor:pointer;
 }
 
-button:hover{
-    opacity:0.9;
-}
-
 </style>
 </head>
 
 <body>
 
 <header>
+
     <h2>KyroChat</h2>
 
     <div id="info"></div>
@@ -156,6 +159,7 @@ button:hover{
     <button id="changeBtn">
         Change Name
     </button>
+
 </header>
 
 <div id="friends"></div>
@@ -175,7 +179,7 @@ button:hover{
     >
 
     <button onclick="sendMsg()">
-        Send
+        SEND
     </button>
 
 </div>
@@ -183,7 +187,7 @@ button:hover{
 <script>
 
 // =======================
-// Firebase Config
+// Firebase
 // =======================
 
 const firebaseConfig = {
@@ -242,7 +246,7 @@ if(!username){
 
 
 // =======================
-// Show Profile
+// Profile UI
 // =======================
 
 function updateProfile(){
@@ -309,6 +313,29 @@ JSON.parse(
     )
 ) || [];
 
+let unread =
+JSON.parse(
+    localStorage.getItem(
+        "kyro_unread"
+    )
+) || {};
+
+function saveFriends(){
+
+    localStorage.setItem(
+        "kyro_friends",
+        JSON.stringify(friends)
+    );
+}
+
+function saveUnread(){
+
+    localStorage.setItem(
+        "kyro_unread",
+        JSON.stringify(unread)
+    );
+}
+
 function renderFriends(){
 
     friendsDiv.innerHTML = "";
@@ -322,12 +349,51 @@ function renderFriends(){
 
         div.innerText = friend.name;
 
+        // click friend
         div.onclick = () => {
 
             document
             .getElementById("target")
             .value = friend.id;
+
+            unread[friend.id] = false;
+
+            saveUnread();
+
+            renderFriends();
         };
+
+        // rename friend
+        div.oncontextmenu = (e) => {
+
+            e.preventDefault();
+
+            let newName =
+            prompt(
+                "Rename friend:",
+                friend.name
+            );
+
+            if(newName){
+
+                friend.name = newName;
+
+                saveFriends();
+
+                renderFriends();
+            }
+        };
+
+        // unread dot
+        if(unread[friend.id]){
+
+            const dot =
+            document.createElement("div");
+
+            dot.className = "dot";
+
+            div.appendChild(dot);
+        }
 
         friendsDiv.appendChild(div);
     });
@@ -348,14 +414,15 @@ function addMessage(type, sender, text){
     div.className =
     "msg " + type;
 
-    div.innerHTML = `
-        <div class="sender">
-            ${sender}
-        </div>
+    div.innerHTML =
+    `
+    <div class="sender">
+        ${sender}
+    </div>
 
-        <div>
-            ${text}
-        </div>
+    <div>
+        ${text}
+    </div>
     `;
 
     chat.appendChild(div);
@@ -386,7 +453,7 @@ function sendMsg(){
     if(!target || !text) return;
 
 
-    // Save friend automatically
+    // auto save friend
     let exists =
     friends.find(
         f => f.id === target
@@ -408,21 +475,14 @@ function sendMsg(){
                 id: target
             });
 
-            localStorage.setItem(
-
-                "kyro_friends",
-
-                JSON.stringify(
-                    friends
-                )
-            );
+            saveFriends();
 
             renderFriends();
         }
     }
 
 
-    // Send message
+    // send message
     db.ref(
         "messages/" + target
     ).push({
@@ -437,7 +497,6 @@ function sendMsg(){
     });
 
 
-    // Add locally
     addMessage(
         "me",
         "You",
@@ -448,6 +507,24 @@ function sendMsg(){
     .getElementById("message")
     .value = "";
 }
+
+
+// =======================
+// ENTER to Send
+// =======================
+
+document
+.getElementById("message")
+.addEventListener(
+    "keypress",
+    function(e){
+
+        if(e.key === "Enter"){
+
+            sendMsg();
+        }
+    }
+);
 
 
 // =======================
@@ -465,7 +542,7 @@ db.ref(
     snapshot.val();
 
 
-    // Auto add sender
+    // auto save sender
     let exists =
     friends.find(
         f => f.id === data.senderID
@@ -480,20 +557,19 @@ db.ref(
             id: data.senderID
         });
 
-        localStorage.setItem(
-
-            "kyro_friends",
-
-            JSON.stringify(
-                friends
-            )
-        );
-
-        renderFriends();
+        saveFriends();
     }
 
 
-    // Show message
+    // unread dot
+    unread[data.senderID] = true;
+
+    saveUnread();
+
+    renderFriends();
+
+
+    // show message
     addMessage(
 
         "other",
@@ -507,7 +583,7 @@ db.ref(
     );
 
 
-    // Delete after reading
+    // delete after reading
     snapshot.ref.remove();
 });
 
