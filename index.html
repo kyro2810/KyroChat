@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>KyroChat V2</title>
+
+<title>KyroChat</title>
 
 <!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
@@ -18,7 +20,7 @@
 }
 
 body{
-    font-family:Arial, sans-serif;
+    font-family:Arial,sans-serif;
     background:#0b141a;
     color:white;
     height:100vh;
@@ -38,7 +40,7 @@ header{
 #leftHeader{
     display:flex;
     align-items:center;
-    gap:10px;
+    gap:12px;
 }
 
 #menuBtn,
@@ -56,8 +58,8 @@ header{
 }
 
 #chatName{
-    padding:10px;
     background:#111b21;
+    padding:10px;
     border-bottom:1px solid #2f3b43;
     font-size:14px;
 }
@@ -177,6 +179,8 @@ header{
     right:14px;
 }
 
+/* Settings */
+
 #settingsMenu{
     position:fixed;
     top:60px;
@@ -201,20 +205,28 @@ header{
 
 </style>
 </head>
+
 <body>
 
 <!-- Sidebar -->
+
 <div id="sidebar">
 
     <div id="sidebarHeader">
         Chats
     </div>
 
-    <button class="sideButton" onclick="addContact()">
+    <button
+        class="sideButton"
+        onclick="addContact()"
+    >
         + Add Contact
     </button>
 
-    <button class="sideButton" onclick="createGroup()">
+    <button
+        class="sideButton"
+        onclick="createGroup()"
+    >
         + Create Group
     </button>
 
@@ -223,21 +235,33 @@ header{
 </div>
 
 <!-- Settings -->
+
 <div id="settingsMenu">
 
-    <div class="settingItem" onclick="changeName()">
+    <div
+        class="settingItem"
+        onclick="changeName()"
+    >
         Change Username
     </div>
 
-    <div class="settingItem" onclick="showMyID()">
+    <div
+        class="settingItem"
+        onclick="showMyID()"
+    >
         Show My ID
     </div>
 
-    <div class="settingItem" onclick="clearLocalChats()">
+    <div
+        class="settingItem"
+        onclick="clearLocalChats()"
+    >
         Clear Local Chats
     </div>
 
 </div>
+
+<!-- Header -->
 
 <header>
 
@@ -259,11 +283,17 @@ header{
 
 </header>
 
+<!-- Chat Name -->
+
 <div id="chatName">
-    No chat selected
+    Open ☰ and select a contact
 </div>
 
+<!-- Chat -->
+
 <div id="chat"></div>
+
+<!-- Bottom -->
 
 <div id="bottom">
 
@@ -272,7 +302,10 @@ header{
         placeholder="Type message..."
     >
 
-    <button id="sendBtn" onclick="sendMsg()">
+    <button
+        id="sendBtn"
+        onclick="sendMsg()"
+    >
         SEND
     </button>
 
@@ -281,17 +314,26 @@ header{
 <script>
 
 // =======================
-// Firebase
+// FIREBASE
 // =======================
 
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_AUTH_DOMAIN",
-  databaseURL: "YOUR_DATABASE_URL",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_STORAGE_BUCKET",
-  messagingSenderId: "YOUR_SENDER_ID",
-  appId: "YOUR_APP_ID"
+
+  apiKey: "AIzaSyDBzZ97kqHW9gcCW_ObNvpCNlW1VTGiDxs",
+
+  authDomain: "kyrochat.firebaseapp.com",
+
+  databaseURL: "https://kyrochat-default-rtdb.asia-southeast1.firebasedatabase.app/",
+
+  projectId: "kyrochat",
+
+  storageBucket: "kyrochat.firebasestorage.app",
+
+  messagingSenderId: "360761453559",
+
+  appId: "1:360761453559:web:2138c9c2e83512ace85cf2",
+
+  measurementId: "G-R2G6R4NM8Q"
 };
 
 firebase.initializeApp(firebaseConfig);
@@ -300,10 +342,11 @@ const db = firebase.database();
 
 
 // =======================
-// Permanent ID
+// USER
 // =======================
 
-let myID = localStorage.getItem("kyro_id");
+let myID =
+localStorage.getItem("kyro_id");
 
 if(!myID){
 
@@ -319,19 +362,13 @@ if(!myID){
     );
 }
 
-
-// =======================
-// Username
-// =======================
-
 let username =
 localStorage.getItem("kyro_name");
 
 if(!username){
 
-    username = prompt(
-        "Enter username:"
-    );
+    username =
+    prompt("Enter username:");
 
     localStorage.setItem(
         "kyro_name",
@@ -341,7 +378,7 @@ if(!username){
 
 
 // =======================
-// Data
+// STORAGE
 // =======================
 
 let contacts =
@@ -369,7 +406,7 @@ let activeChat = null;
 
 
 // =======================
-// Elements
+// ELEMENTS
 // =======================
 
 const chat =
@@ -383,7 +420,7 @@ document.getElementById("chatName");
 
 
 // =======================
-// Save
+// SAVE
 // =======================
 
 function saveAll(){
@@ -406,42 +443,57 @@ function saveAll(){
 
 
 // =======================
-// Sidebar
+// SIDEBAR
 // =======================
 
-const sidebar =
-document.getElementById("sidebar");
+document
+.getElementById("menuBtn")
+.addEventListener(
+    "click",
+    function(){
 
-const menuBtn =
-document.getElementById("menuBtn");
-
-menuBtn.onclick = () => {
-
-    sidebar.classList.toggle("open");
-};
-
-
-// =======================
-// Settings
-// =======================
-
-const settingsBtn =
-document.getElementById("settingsBtn");
-
-const settingsMenu =
-document.getElementById("settingsMenu");
-
-settingsBtn.onclick = () => {
-
-    settingsMenu.style.display =
-    settingsMenu.style.display === "block"
-    ? "none"
-    : "block";
-};
+        document
+        .getElementById("sidebar")
+        .classList.toggle("open");
+    }
+);
 
 
 // =======================
-// Contact Rendering
+// SETTINGS
+// =======================
+
+document
+.getElementById("settingsBtn")
+.addEventListener(
+    "click",
+    function(){
+
+        const menu =
+        document.getElementById(
+            "settingsMenu"
+        );
+
+        if(
+            menu.style.display ===
+            "block"
+        ){
+
+            menu.style.display =
+            "none";
+        }
+
+        else{
+
+            menu.style.display =
+            "block";
+        }
+    }
+);
+
+
+// =======================
+// RENDER CONTACTS
 // =======================
 
 function renderContacts(){
@@ -453,9 +505,11 @@ function renderContacts(){
         const div =
         document.createElement("div");
 
-        div.className = "contact";
+        div.className =
+        "contact";
 
-        div.innerText = contact.name;
+        div.innerText =
+        contact.name;
 
 
         // unread dot
@@ -464,7 +518,8 @@ function renderContacts(){
             const dot =
             document.createElement("div");
 
-            dot.className = "dot";
+            dot.className =
+            "dot";
 
             div.appendChild(dot);
         }
@@ -473,37 +528,55 @@ function renderContacts(){
         // open chat
         div.onclick = () => {
 
-            activeChat = contact.id;
+            activeChat =
+            contact.id;
 
-            unread[contact.id] = false;
+            unread[contact.id] =
+            false;
 
             saveAll();
 
             renderContacts();
 
-            openChat(contact.id, contact.name);
+            openChat(
+                contact.id,
+                contact.name
+            );
 
-            sidebar.classList.remove("open");
+            document
+            .getElementById("sidebar")
+            .classList.remove("open");
         };
 
 
-        // rename contact
+        // rename
         div.oncontextmenu = (e) => {
 
             e.preventDefault();
 
-            let newName = prompt(
+            let newName =
+            prompt(
                 "Rename contact:",
                 contact.name
             );
 
             if(newName){
 
-                contact.name = newName;
+                contact.name =
+                newName;
 
                 saveAll();
 
                 renderContacts();
+
+                if(
+                    activeChat ===
+                    contact.id
+                ){
+
+                    chatName.innerText =
+                    newName;
+                }
             }
         };
 
@@ -515,14 +588,15 @@ renderContacts();
 
 
 // =======================
-// Open Chat
+// OPEN CHAT
 // =======================
 
-function openChat(id, name){
+function openChat(id,name){
 
     chat.innerHTML = "";
 
-    chatName.innerText = name;
+    chatName.innerText =
+    name;
 
     if(!localChats[id]){
 
@@ -542,10 +616,15 @@ function openChat(id, name){
 
 
 // =======================
-// Add Message UI
+// ADD MESSAGE UI
 // =======================
 
-function addMessage(type, sender, text, save=true){
+function addMessage(
+    type,
+    sender,
+    text,
+    save=true
+){
 
     const div =
     document.createElement("div");
@@ -572,21 +651,27 @@ function addMessage(type, sender, text, save=true){
 
     if(save && activeChat){
 
-        if(!localChats[activeChat]){
+        if(
+            !localChats[activeChat]
+        ){
 
-            localChats[activeChat] = [];
+            localChats[activeChat] =
+            [];
         }
 
-        localChats[activeChat].push({
+        localChats[activeChat]
+        .push({
 
             type:type,
+
             sender:sender,
+
             text:text
         });
 
-        // keep only last 50 messages
         localChats[activeChat] =
-        localChats[activeChat].slice(-50);
+        localChats[activeChat]
+        .slice(-50);
 
         saveAll();
     }
@@ -594,18 +679,20 @@ function addMessage(type, sender, text, save=true){
 
 
 // =======================
-// Add Contact
+// ADD CONTACT
 // =======================
 
 function addContact(){
 
-    let id = prompt(
+    let id =
+    prompt(
         "Enter Friend ID:"
     );
 
     if(!id) return;
 
-    let name = prompt(
+    let name =
+    prompt(
         "Enter Friend Name:"
     );
 
@@ -615,6 +702,7 @@ function addContact(){
     contacts.push({
 
         id:id,
+
         name:name
     });
 
@@ -625,7 +713,7 @@ function addContact(){
 
 
 // =======================
-// Create Group
+// CREATE GROUP
 // =======================
 
 function createGroup(){
@@ -637,20 +725,24 @@ function createGroup(){
 
 
 // =======================
-// Send Message
+// SEND MESSAGE
 // =======================
 
 function sendMsg(){
 
     if(!activeChat){
 
-        alert("Select a chat first.");
+        alert(
+            "Open a contact first."
+        );
 
         return;
     }
 
     const input =
-    document.getElementById("message");
+    document.getElementById(
+        "message"
+    );
 
     const text =
     input.value.trim();
@@ -659,7 +751,8 @@ function sendMsg(){
 
 
     db.ref(
-        "messages/" + activeChat
+        "messages/" +
+        activeChat
     ).push({
 
         sender: username,
@@ -683,7 +776,7 @@ function sendMsg(){
 
 
 // =======================
-// ENTER to Send
+// ENTER TO SEND
 // =======================
 
 document
@@ -692,7 +785,9 @@ document
     "keypress",
     function(e){
 
-        if(e.key === "Enter"){
+        if(
+            e.key === "Enter"
+        ){
 
             sendMsg();
         }
@@ -701,7 +796,7 @@ document
 
 
 // =======================
-// Receive Messages
+// RECEIVE MESSAGE
 // =======================
 
 db.ref(
@@ -715,10 +810,11 @@ db.ref(
     snapshot.val();
 
 
-    // auto save contact
+    // auto add contact
     let exists =
     contacts.find(
-        c => c.id === data.senderID
+        c =>
+        c.id === data.senderID
     );
 
     if(!exists){
@@ -726,67 +822,83 @@ db.ref(
         contacts.push({
 
             id:data.senderID,
+
             name:data.sender
         });
     }
 
 
-    unread[data.senderID] = true;
+    // unread
+    unread[data.senderID] =
+    true;
 
-    renderContacts();
 
+    // save local
+    if(
+        !localChats[data.senderID]
+    ){
 
-    // store locally
-    if(!localChats[data.senderID]){
-
-        localChats[data.senderID] = [];
+        localChats[data.senderID]
+        = [];
     }
 
-    localChats[data.senderID].push({
+    localChats[data.senderID]
+    .push({
 
         type:"other",
+
         sender:
         data.sender +
         " (" +
         data.senderID +
         ")",
+
         text:data.text
     });
 
     saveAll();
 
 
-    // if current chat open
-    if(activeChat === data.senderID){
+    // if chat open
+    if(
+        activeChat ===
+        data.senderID
+    ){
 
         addMessage(
+
             "other",
+
             data.sender +
             " (" +
             data.senderID +
             ")",
+
             data.text,
+
             false
         );
 
-        unread[data.senderID] = false;
+        unread[data.senderID] =
+        false;
     }
 
     renderContacts();
 
 
-    // remove relay message
+    // delete relay msg
     snapshot.ref.remove();
 });
 
 
 // =======================
-// Settings Functions
+// SETTINGS FUNCTIONS
 // =======================
 
 function changeName(){
 
-    let newName = prompt(
+    let newName =
+    prompt(
         "Enter new username:"
     );
 
@@ -799,21 +911,23 @@ function changeName(){
         username
     );
 
-    alert("Username changed.");
+    alert(
+        "Username changed."
+    );
 }
-
 
 function showMyID(){
 
     alert(
-        "Your ID:\n\n" + myID
+        "Your ID:\n\n" +
+        myID
     );
 }
 
-
 function clearLocalChats(){
 
-    let confirmClear = confirm(
+    let confirmClear =
+    confirm(
         "Clear local chats?"
     );
 
@@ -825,10 +939,12 @@ function clearLocalChats(){
 
     chat.innerHTML = "";
 
-    alert("Local chats cleared.");
+    alert(
+        "Local chats cleared."
+    );
 }
 
 </script>
+
 </body>
 </html>
-```
