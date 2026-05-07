@@ -109,6 +109,26 @@ button{
 button:hover{
     opacity:0.9;
 }
+#friends{
+    display:flex;
+    overflow-x:auto;
+    gap:8px;
+    padding:10px;
+    background:#111b21;
+    border-bottom:1px solid #2f3b43;
+}
+
+.friend{
+    background:#202c33;
+    padding:8px 12px;
+    border-radius:8px;
+    cursor:pointer;
+    white-space:nowrap;
+}
+
+.friend:hover{
+    background:#2a3942;
+}
 </style>
 </head>
 
@@ -118,6 +138,8 @@ button:hover{
     <h2>KyroChat</h2>
     <div id="info"></div>
 </header>
+
+<div id="friends"></div>
 
 <div id="chat"></div>
 
