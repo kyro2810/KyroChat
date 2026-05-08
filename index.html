@@ -5,232 +5,259 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>KyroChat V4</title>
+<title>KyroChat V5</title>
 
-<!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
 
 <style>
 
 *{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
+margin:0;
+padding:0;
+box-sizing:border-box;
 }
 
 body{
-    font-family:Arial,sans-serif;
-    background:#0b141a;
-    color:white;
-    height:100vh;
-    display:flex;
-    flex-direction:column;
+font-family:Arial,sans-serif;
+background:#0b141a;
+color:white;
+height:100vh;
+display:flex;
+flex-direction:column;
+overflow:hidden;
 }
 
 /* HEADER */
 
 header{
-    background:#202c33;
-    padding:12px;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    border-bottom:1px solid #2f3b43;
-    z-index:10;
+background:#202c33;
+padding:12px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+border-bottom:1px solid #2f3b43;
 }
 
 #leftHeader{
-    display:flex;
-    align-items:center;
-    gap:12px;
+display:flex;
+align-items:center;
+gap:12px;
 }
 
 #menuBtn,
 #settingsBtn{
-    background:none;
-    border:none;
-    color:white;
-    font-size:22px;
-    cursor:pointer;
+background:none;
+border:none;
+color:white;
+font-size:22px;
+cursor:pointer;
 }
 
 #title{
-    font-size:20px;
-    font-weight:bold;
+font-size:20px;
+font-weight:bold;
 }
 
-/* TOP INFO */
+/* TOP */
 
 #chatName{
-    background:#111b21;
-    padding:12px;
-    border-bottom:1px solid #2f3b43;
-    line-height:1.6;
+background:#111b21;
+padding:12px;
+border-bottom:1px solid #2f3b43;
+line-height:1.5;
 }
 
 #myIDText{
-    color:#00a884;
-    font-size:13px;
+color:#00a884;
+font-size:13px;
 }
 
 /* CHAT */
 
 #chat{
-    flex:1;
-    overflow-y:auto;
-    padding:15px;
-    display:flex;
-    flex-direction:column;
+flex:1;
+overflow-y:auto;
+padding:15px;
+display:flex;
+flex-direction:column;
 }
 
 .msg{
-    max-width:75%;
-    padding:10px;
-    margin:6px 0;
-    border-radius:10px;
-    word-wrap:break-word;
-    position:relative;
+max-width:75%;
+padding:10px;
+margin:6px 0;
+border-radius:10px;
+word-wrap:break-word;
+position:relative;
 }
 
 .me{
-    background:#005c4b;
-    align-self:flex-end;
+background:#005c4b;
+align-self:flex-end;
 }
 
 .other{
-    background:#202c33;
-    align-self:flex-start;
+background:#202c33;
+align-self:flex-start;
 }
 
 .sender{
-    font-size:11px;
-    opacity:0.7;
-    margin-bottom:5px;
+font-size:11px;
+opacity:0.7;
+margin-bottom:5px;
 }
 
-.deleteBtn{
-    margin-top:8px;
-    font-size:11px;
-    opacity:0.7;
-    cursor:pointer;
+/* REPLY */
+
+.replyBox{
+background:rgba(255,255,255,0.08);
+padding:6px;
+border-left:3px solid #00a884;
+margin-bottom:6px;
+font-size:12px;
+border-radius:5px;
+}
+
+.replyName{
+font-size:11px;
+color:#00a884;
+margin-bottom:3px;
 }
 
 /* INPUT */
 
+#replyPreview{
+display:none;
+background:#111b21;
+padding:8px;
+border-top:1px solid #2f3b43;
+}
+
+#replyTop{
+font-size:11px;
+color:#00a884;
+margin-bottom:4px;
+}
+
+#cancelReply{
+float:right;
+cursor:pointer;
+}
+
 #bottom{
-    display:flex;
-    gap:5px;
-    padding:10px;
-    background:#202c33;
+display:flex;
+gap:5px;
+padding:10px;
+background:#202c33;
 }
 
 #message{
-    flex:1;
-    border:none;
-    border-radius:8px;
-    padding:10px;
-    background:#2a3942;
-    color:white;
+flex:1;
+border:none;
+border-radius:8px;
+padding:10px;
+background:#2a3942;
+color:white;
 }
 
 #sendBtn{
-    border:none;
-    background:#00a884;
-    color:white;
-    padding:10px 15px;
-    border-radius:8px;
-    cursor:pointer;
+border:none;
+background:#00a884;
+color:white;
+padding:10px 15px;
+border-radius:8px;
+cursor:pointer;
 }
 
 /* SIDEBAR */
 
 #overlay{
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,0.4);
-    display:none;
-    z-index:998;
+position:fixed;
+inset:0;
+background:rgba(0,0,0,0.4);
+display:none;
+z-index:998;
 }
 
 #sidebar{
-    position:fixed;
-    top:0;
-    left:-300px;
-    width:280px;
-    height:100%;
-    background:#111b21;
-    transition:0.25s;
-    z-index:999;
-    overflow-y:auto;
-    border-right:1px solid #2f3b43;
+position:fixed;
+top:0;
+left:-300px;
+width:280px;
+height:100%;
+background:#111b21;
+transition:0.25s;
+z-index:999;
+overflow-y:auto;
+border-right:1px solid #2f3b43;
 }
 
 #sidebar.open{
-    left:0;
+left:0;
 }
 
 #sidebarHeader{
-    padding:15px;
-    font-size:20px;
-    font-weight:bold;
-    border-bottom:1px solid #2f3b43;
+padding:15px;
+font-size:20px;
+font-weight:bold;
+border-bottom:1px solid #2f3b43;
 }
 
 .sideButton{
-    width:100%;
-    padding:12px;
-    border:none;
-    background:#202c33;
-    color:white;
-    text-align:left;
-    cursor:pointer;
-    border-bottom:1px solid #2f3b43;
+width:100%;
+padding:12px;
+border:none;
+background:#202c33;
+color:white;
+text-align:left;
+cursor:pointer;
+border-bottom:1px solid #2f3b43;
 }
 
 .contact{
-    padding:12px;
-    border-bottom:1px solid #2f3b43;
-    cursor:pointer;
-    position:relative;
+padding:12px;
+border-bottom:1px solid #2f3b43;
+cursor:pointer;
+position:relative;
 }
 
 .contact:hover{
-    background:#202c33;
+background:#202c33;
 }
 
 .dot{
-    width:10px;
-    height:10px;
-    background:red;
-    border-radius:50%;
-    position:absolute;
-    top:14px;
-    right:14px;
+width:10px;
+height:10px;
+background:red;
+border-radius:50%;
+position:absolute;
+top:14px;
+right:14px;
 }
 
 /* SETTINGS */
 
 #settingsMenu{
-    position:fixed;
-    top:60px;
-    right:10px;
-    background:#202c33;
-    border-radius:10px;
-    overflow:hidden;
-    display:none;
-    z-index:1001;
-    border:1px solid #2f3b43;
+position:fixed;
+top:60px;
+right:10px;
+background:#202c33;
+border-radius:10px;
+overflow:hidden;
+display:none;
+z-index:1001;
+border:1px solid #2f3b43;
 }
 
 .settingItem{
-    padding:12px 18px;
-    cursor:pointer;
-    border-bottom:1px solid #2f3b43;
+padding:12px 18px;
+cursor:pointer;
+border-bottom:1px solid #2f3b43;
 }
 
 .settingItem:hover{
-    background:#2a3942;
+background:#2a3942;
 }
 
 </style>
@@ -238,33 +265,29 @@ header{
 
 <body>
 
-<!-- OVERLAY -->
-
 <div id="overlay"></div>
 
 <!-- SIDEBAR -->
 
 <div id="sidebar">
 
-    <div id="sidebarHeader">
-        Chats
-    </div>
+<div id="sidebarHeader">
+Chats
+</div>
 
-    <button
-        class="sideButton"
-        onclick="addContact()"
-    >
-        + Add Contact
-    </button>
+<button
+class="sideButton"
+onclick="addContact()">
++ Add Contact
+</button>
 
-    <button
-        class="sideButton"
-        onclick="createGroup()"
-    >
-        + Create Group
-    </button>
+<button
+class="sideButton"
+onclick="createGroup()">
++ Create Group
+</button>
 
-    <div id="contactList"></div>
+<div id="contactList"></div>
 
 </div>
 
@@ -272,33 +295,20 @@ header{
 
 <div id="settingsMenu">
 
-    <div
-        class="settingItem"
-        onclick="changeName()"
-    >
-        Change Username
-    </div>
+<div class="settingItem"
+onclick="changeName()">
+Change Username
+</div>
 
-    <div
-        class="settingItem"
-        onclick="showMyID()"
-    >
-        Show My ID
-    </div>
+<div class="settingItem"
+onclick="showMyID()">
+Show My ID
+</div>
 
-    <div
-        class="settingItem"
-        onclick="copyMyID()"
-    >
-        Copy My ID
-    </div>
-
-    <div
-        class="settingItem"
-        onclick="clearLocalChats()"
-    >
-        Clear Local Chats
-    </div>
+<div class="settingItem"
+onclick="copyMyID()">
+Copy My ID
+</div>
 
 </div>
 
@@ -306,42 +316,39 @@ header{
 
 <header>
 
-    <div id="leftHeader">
+<div id="leftHeader">
 
-        <button id="menuBtn">
-            ☰
-        </button>
+<button id="menuBtn">
+☰
+</button>
 
-        <div id="title">
-            KyroChat
-        </div>
+<div id="title">
+KyroChat
+</div>
 
-    </div>
+</div>
 
-    <button id="settingsBtn">
-        ⚙
-    </button>
+<button id="settingsBtn">
+⚙
+</button>
 
 </header>
 
-<!-- INFO -->
+<!-- TOP -->
 
 <div id="chatName">
 
-    Open ☰ and select a contact
+Open ☰ and select a contact
 
-    <br><br>
+<br><br>
 
-    <span style="
-    font-size:12px;
-    opacity:0.7;
-    ">
-        Your ID:
-    </span>
+<span style="font-size:12px;opacity:0.7;">
+Your ID:
+</span>
 
-    <br>
+<br>
 
-    <span id="myIDText"></span>
+<span id="myIDText"></span>
 
 </div>
 
@@ -349,47 +356,59 @@ header{
 
 <div id="chat"></div>
 
+<!-- REPLY PREVIEW -->
+
+<div id="replyPreview">
+
+<div id="replyTop">
+Replying...
+<span id="cancelReply">
+✕
+</span>
+</div>
+
+<div id="replyText"></div>
+
+</div>
+
 <!-- INPUT -->
 
 <div id="bottom">
 
-    <input
-        id="message"
-        placeholder="Type message..."
-    >
+<input
+id="message"
+placeholder="Type message..."
+>
 
-    <button
-        id="sendBtn"
-        onclick="sendMsg()"
-    >
-        SEND
-    </button>
+<button
+id="sendBtn"
+onclick="sendMsg()">
+SEND
+</button>
 
 </div>
 
 <script>
 
-// =======================
 // FIREBASE
-// =======================
 
 const firebaseConfig = {
 
-  apiKey: "AIzaSyDBzZ97kqHW9gcCW_ObNvpCNlW1VTGiDxs",
+apiKey: "AIzaSyDBzZ97kqHW9gcCW_ObNvpCNlW1VTGiDxs",
 
-  authDomain: "kyrochat.firebaseapp.com",
+authDomain: "kyrochat.firebaseapp.com",
 
-  databaseURL: "https://kyrochat-default-rtdb.asia-southeast1.firebasedatabase.app/",
+databaseURL: "https://kyrochat-default-rtdb.asia-southeast1.firebasedatabase.app/",
 
-  projectId: "kyrochat",
+projectId: "kyrochat",
 
-  storageBucket: "kyrochat.firebasestorage.app",
+storageBucket: "kyrochat.firebasestorage.app",
 
-  messagingSenderId: "360761453559",
+messagingSenderId: "360761453559",
 
-  appId: "1:360761453559:web:2138c9c2e83512ace85cf2",
+appId: "1:360761453559:web:2138c9c2e83512ace85cf2",
 
-  measurementId: "G-R2G6R4NM8Q"
+measurementId: "G-R2G6R4NM8Q"
 };
 
 firebase.initializeApp(firebaseConfig);
@@ -397,25 +416,23 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
 
-// =======================
 // USER
-// =======================
 
 let myID =
 localStorage.getItem("kyro_id");
 
 if(!myID){
 
-    myID =
-    "ID-" +
-    Math.random()
-    .toString(36)
-    .substring(2,10);
+myID =
+"ID-" +
+Math.random()
+.toString(36)
+.substring(2,10);
 
-    localStorage.setItem(
-        "kyro_id",
-        myID
-    );
+localStorage.setItem(
+"kyro_id",
+myID
+);
 }
 
 let username =
@@ -423,13 +440,13 @@ localStorage.getItem("kyro_name");
 
 if(!username){
 
-    username =
-    prompt("Enter username:");
+username =
+prompt("Enter username:");
 
-    localStorage.setItem(
-        "kyro_name",
-        username
-    );
+localStorage.setItem(
+"kyro_name",
+username
+);
 }
 
 document
@@ -437,37 +454,35 @@ document
 .innerText = myID;
 
 
-// =======================
 // STORAGE
-// =======================
 
 let contacts =
 JSON.parse(
-    localStorage.getItem(
-        "kyro_contacts"
-    )
+localStorage.getItem(
+"kyro_contacts"
+)
 ) || [];
 
 let unread =
 JSON.parse(
-    localStorage.getItem(
-        "kyro_unread"
-    )
+localStorage.getItem(
+"kyro_unread"
+)
 ) || {};
 
 let localChats =
 JSON.parse(
-    localStorage.getItem(
-        "kyro_localChats"
-    )
+localStorage.getItem(
+"kyro_localChats"
+)
 ) || {};
 
 let activeChat = null;
 
+let replyingTo = null;
 
-// =======================
+
 // ELEMENTS
-// =======================
 
 const chat =
 document.getElementById("chat");
@@ -476,32 +491,28 @@ const contactList =
 document.getElementById("contactList");
 
 
-// =======================
 // SAVE
-// =======================
 
 function saveAll(){
 
-    localStorage.setItem(
-        "kyro_contacts",
-        JSON.stringify(contacts)
-    );
+localStorage.setItem(
+"kyro_contacts",
+JSON.stringify(contacts)
+);
 
-    localStorage.setItem(
-        "kyro_unread",
-        JSON.stringify(unread)
-    );
+localStorage.setItem(
+"kyro_unread",
+JSON.stringify(unread)
+);
 
-    localStorage.setItem(
-        "kyro_localChats",
-        JSON.stringify(localChats)
-    );
+localStorage.setItem(
+"kyro_localChats",
+JSON.stringify(localChats)
+);
 }
 
 
-// =======================
 // SIDEBAR
-// =======================
 
 const sidebar =
 document.getElementById("sidebar");
@@ -513,626 +524,553 @@ document
 .getElementById("menuBtn")
 .onclick = () => {
 
-    sidebar.classList.add("open");
+sidebar.classList.add("open");
 
-    overlay.style.display =
-    "block";
+overlay.style.display =
+"block";
 };
 
 overlay.onclick = () => {
 
-    sidebar.classList.remove(
-        "open"
-    );
+sidebar.classList.remove(
+"open"
+);
 
-    overlay.style.display =
-    "none";
+overlay.style.display =
+"none";
 };
 
 
-// =======================
 // SETTINGS
-// =======================
 
 document
 .getElementById("settingsBtn")
 .onclick = () => {
 
-    const menu =
-    document.getElementById(
-        "settingsMenu"
-    );
+const menu =
+document.getElementById(
+"settingsMenu"
+);
 
-    if(
-        menu.style.display ===
-        "block"
-    ){
+if(menu.style.display === "block"){
 
-        menu.style.display =
-        "none";
-    }
+menu.style.display = "none";
+}
 
-    else{
+else{
 
-        menu.style.display =
-        "block";
-    }
+menu.style.display = "block";
+}
 };
 
 
-// =======================
-// RENDER CONTACTS
-// =======================
+// CONTACTS
 
 function renderContacts(){
 
-    contactList.innerHTML = "";
+contactList.innerHTML = "";
 
-    contacts.forEach(contact => {
+contacts.forEach(contact => {
 
-        const div =
-        document.createElement("div");
+const div =
+document.createElement("div");
 
-        div.className =
-        "contact";
+div.className =
+"contact";
 
-        div.innerText =
-        contact.name;
-
-
-        // unread
-        if(unread[contact.id]){
-
-            const dot =
-            document.createElement("div");
-
-            dot.className =
-            "dot";
-
-            div.appendChild(dot);
-        }
+div.innerText =
+contact.name;
 
 
-        // open chat
-        div.onclick = () => {
+if(unread[contact.id]){
 
-            activeChat =
-            contact.id;
+const dot =
+document.createElement("div");
 
-            unread[contact.id] =
-            false;
+dot.className =
+"dot";
 
-            saveAll();
-
-            renderContacts();
-
-            openChat(
-                contact.id,
-                contact.name
-            );
-
-            sidebar.classList.remove(
-                "open"
-            );
-
-            overlay.style.display =
-            "none";
-        };
+div.appendChild(dot);
+}
 
 
-        // rename
-        div.oncontextmenu = (e) => {
+div.onclick = () => {
 
-            e.preventDefault();
+activeChat =
+contact.id;
 
-            let newName =
-            prompt(
-                "Rename contact:",
-                contact.name
-            );
+unread[contact.id] =
+false;
 
-            if(newName){
+saveAll();
 
-                contact.name =
-                newName;
+renderContacts();
 
-                saveAll();
+openChat(
+contact.id,
+contact.name
+);
 
-                renderContacts();
-            }
-        };
+sidebar.classList.remove(
+"open"
+);
 
-        contactList.appendChild(div);
-    });
+overlay.style.display =
+"none";
+};
+
+
+div.oncontextmenu = (e) => {
+
+e.preventDefault();
+
+let newName =
+prompt(
+"Rename contact:",
+contact.name
+);
+
+if(newName){
+
+contact.name =
+newName;
+
+saveAll();
+
+renderContacts();
+}
+};
+
+contactList.appendChild(div);
+
+});
 }
 
 renderContacts();
 
 
-// =======================
 // OPEN CHAT
-// =======================
 
 function openChat(id,name){
 
-    chat.innerHTML = "";
+chat.innerHTML = "";
 
-    document
-    .getElementById("chatName")
-    .innerHTML =
-    `
-    ${name}
+document
+.getElementById("chatName")
+.innerHTML =
+`
+${name}
 
-    <br><br>
+<br><br>
 
-    <span style="
-    font-size:12px;
-    opacity:0.7;
-    ">
-        Your ID:
-    </span>
+<span style="font-size:12px;opacity:0.7;">
+Your ID:
+</span>
 
-    <br>
+<br>
 
-    <span id="myIDText">
-        ${myID}
-    </span>
-    `;
+<span id="myIDText">
+${myID}
+</span>
+`;
 
-    if(!localChats[id]){
+if(!localChats[id]){
 
-        localChats[id] = [];
-    }
+localChats[id] = [];
+}
 
-    localChats[id].forEach(msg => {
+localChats[id].forEach(msg => {
 
-        addMessage(
-            msg.type,
-            msg.sender,
-            msg.text,
-            false,
-            msg.id
-        );
-    });
+addMessage(
+msg.type,
+msg.sender,
+msg.text,
+msg.reply,
+false
+);
+
+});
 }
 
 
-// =======================
-// ADD MESSAGE UI
-// =======================
+// ADD MESSAGE
 
 function addMessage(
-    type,
-    sender,
-    text,
-    save=true,
-    messageID=null
+type,
+sender,
+text,
+reply=null,
+save=true
 ){
 
-    const div =
-    document.createElement("div");
+const div =
+document.createElement("div");
 
-    div.className =
-    "msg " + type;
-
-    div.dataset.id =
-    messageID || "";
-
-    div.innerHTML =
-    `
-    <div class="sender">
-        ${sender}
-    </div>
-
-    <div class="msgText">
-        ${text}
-    </div>
-    `;
+div.className =
+"msg " + type;
 
 
-    // delete button
-    if(type === "me"){
+let replyHTML = "";
 
-        const del =
-        document.createElement("div");
+if(reply){
 
-        del.className =
-        "deleteBtn";
+replyHTML =
+`
+<div class="replyBox">
 
-        del.innerText =
-        "Delete for everyone";
+<div class="replyName">
+Reply to ${reply.sender}
+</div>
 
-        del.onclick = () => {
+<div>
+${reply.text}
+</div>
 
-            deleteMessageForEveryone(
-                div.dataset.id,
-                div
-            );
-        };
+</div>
+`;
+}
 
-        div.appendChild(del);
-    }
+div.innerHTML =
+`
+<div class="sender">
+${sender}
+</div>
 
-    chat.appendChild(div);
+${replyHTML}
 
-    chat.scrollTop =
-    chat.scrollHeight;
+<div>
+${text}
+</div>
+`;
 
 
-    if(save && activeChat){
+// REPLY SYSTEM
 
-        if(!localChats[activeChat]){
+div.oncontextmenu = (e) => {
 
-            localChats[activeChat] =
-            [];
-        }
+e.preventDefault();
 
-        localChats[activeChat]
-        .push({
+replyingTo = {
 
-            id:messageID,
+sender:sender,
 
-            type:type,
+text:text
+};
 
-            sender:sender,
+document
+.getElementById("replyPreview")
+.style.display =
+"block";
 
-            text:text
-        });
+document
+.getElementById("replyText")
+.innerHTML =
+`
+<b>${sender}</b><br>
+${text}
+`;
+};
 
-        localChats[activeChat] =
-        localChats[activeChat]
-        .slice(-50);
+chat.appendChild(div);
 
-        saveAll();
-    }
+chat.scrollTop =
+chat.scrollHeight;
+
+
+if(save && activeChat){
+
+if(!localChats[activeChat]){
+
+localChats[activeChat]
+= [];
+}
+
+localChats[activeChat]
+.push({
+
+type:type,
+
+sender:sender,
+
+text:text,
+
+reply:reply
+});
+
+localChats[activeChat] =
+localChats[activeChat]
+.slice(-50);
+
+saveAll();
+}
 }
 
 
-// =======================
-// DELETE MESSAGE
-// =======================
+// CANCEL REPLY
 
-function deleteMessageForEveryone(
-    messageID,
-    div
-){
+document
+.getElementById("cancelReply")
+.onclick = () => {
 
-    if(!messageID) return;
+replyingTo = null;
 
-    db.ref(
-        "deleted/" +
-        activeChat +
-        "/" +
-        messageID
-    ).set(true);
-
-    div.querySelector(
-        ".msgText"
-    ).innerText =
-    "This message was deleted";
-}
+document
+.getElementById("replyPreview")
+.style.display =
+"none";
+};
 
 
-// =======================
 // ADD CONTACT
-// =======================
 
 function addContact(){
 
-    let id =
-    prompt(
-        "Enter Friend ID:"
-    );
+let id =
+prompt(
+"Enter Friend ID:"
+);
 
-    if(!id) return;
+if(!id) return;
 
-    let name =
-    prompt(
-        "Enter Friend Name:"
-    );
+let name =
+prompt(
+"Enter Friend Name:"
+);
 
-    if(!name) return;
+if(!name) return;
 
-    contacts.push({
+contacts.push({
 
-        id:id,
+id:id,
 
-        name:name
-    });
+name:name
+});
 
-    saveAll();
+saveAll();
 
-    renderContacts();
+renderContacts();
 }
 
 
-// =======================
-// GROUPS
-// =======================
+// GROUP
 
 function createGroup(){
 
-    alert(
-        "Group system coming soon 😄"
-    );
+alert(
+"Groups coming soon 😄"
+);
 }
 
 
-// =======================
-// SEND MESSAGE
-// =======================
+// SEND
 
 function sendMsg(){
 
-    if(!activeChat){
+if(!activeChat){
 
-        alert(
-            "Open a contact first."
-        );
+alert(
+"Open a contact first."
+);
 
-        return;
-    }
+return;
+}
 
-    const input =
-    document.getElementById(
-        "message"
-    );
+const input =
+document.getElementById(
+"message"
+);
 
-    const text =
-    input.value.trim();
+const text =
+input.value.trim();
 
-    if(!text) return;
-
-
-    const messageID =
-    "msg-" +
-    Date.now();
+if(!text) return;
 
 
-    db.ref(
-        "messages/" +
-        activeChat
-    ).push({
+db.ref(
+"messages/" +
+activeChat
+).push({
 
-        id:messageID,
+sender: username,
 
-        sender: username,
+senderID: myID,
 
-        senderID: myID,
+text: text,
 
-        text: text,
+reply: replyingTo,
 
-        time: Date.now()
-    });
+time: Date.now()
+});
 
 
-    addMessage(
-        "me",
-        "You",
-        text,
-        true,
-        messageID
-    );
+addMessage(
+"me",
+"You",
+text,
+replyingTo
+);
 
-    input.value = "";
+
+replyingTo = null;
+
+document
+.getElementById("replyPreview")
+.style.display =
+"none";
+
+input.value = "";
 }
 
 
-// =======================
 // ENTER TO SEND
-// =======================
 
 document
 .getElementById("message")
 .addEventListener(
-    "keypress",
-    function(e){
+"keypress",
+function(e){
 
-        if(
-            e.key === "Enter"
-        ){
+if(e.key === "Enter"){
 
-            sendMsg();
-        }
-    }
+sendMsg();
+}
+}
 );
 
 
-// =======================
-// RECEIVE MESSAGE
-// =======================
+// RECEIVE
 
 db.ref(
-    "messages/" + myID
+"messages/" + myID
 )
 .on(
-    "child_added",
-    snapshot => {
+"child_added",
+snapshot => {
 
-    const data =
-    snapshot.val();
-
-
-    // auto contact
-    let exists =
-    contacts.find(
-        c =>
-        c.id === data.senderID
-    );
-
-    if(!exists){
-
-        contacts.push({
-
-            id:data.senderID,
-
-            name:data.sender
-        });
-    }
+const data =
+snapshot.val();
 
 
-    unread[data.senderID] =
-    true;
+let exists =
+contacts.find(
+c =>
+c.id === data.senderID
+);
+
+if(!exists){
+
+contacts.push({
+
+id:data.senderID,
+
+name:data.sender
+});
+}
 
 
-    if(
-        !localChats[data.senderID]
-    ){
-
-        localChats[data.senderID]
-        = [];
-    }
-
-    localChats[data.senderID]
-    .push({
-
-        id:data.id,
-
-        type:"other",
-
-        sender:
-        data.sender +
-        " (" +
-        data.senderID +
-        ")",
-
-        text:data.text
-    });
-
-    saveAll();
+unread[data.senderID] =
+true;
 
 
-    if(
-        activeChat ===
-        data.senderID
-    ){
+if(
+!localChats[data.senderID]
+){
 
-        addMessage(
+localChats[data.senderID]
+= [];
+}
 
-            "other",
+localChats[data.senderID]
+.push({
 
-            data.sender +
-            " (" +
-            data.senderID +
-            ")",
+type:"other",
 
-            data.text,
+sender:
+data.sender +
+" (" +
+data.senderID +
+")",
 
-            false,
+text:data.text,
 
-            data.id
-        );
+reply:data.reply
+});
 
-        unread[data.senderID] =
-        false;
-    }
-
-    renderContacts();
-
-
-    // listen for deletes
-    db.ref(
-        "deleted/" +
-        myID +
-        "/" +
-        data.id
-    ).on(
-        "value",
-        snap => {
-
-        if(snap.exists()){
-
-            document
-            .querySelectorAll(".msg")
-            .forEach(msg => {
-
-                if(
-                    msg.dataset.id ===
-                    data.id
-                ){
-
-                    const txt =
-                    msg.querySelector(
-                        ".msgText"
-                    );
-
-                    if(txt){
-
-                        txt.innerText =
-                        "This message was deleted";
-                    }
-                }
-            });
-        }
-    });
+saveAll();
 
 
-    snapshot.ref.remove();
+if(
+activeChat ===
+data.senderID
+){
+
+addMessage(
+
+"other",
+
+data.sender +
+" (" +
+data.senderID +
+")",
+
+data.text,
+
+data.reply,
+
+false
+);
+
+unread[data.senderID] =
+false;
+}
+
+renderContacts();
+
+snapshot.ref.remove();
+
 });
 
 
-// =======================
 // SETTINGS
-// =======================
 
 function changeName(){
 
-    let newName =
-    prompt(
-        "Enter new username:"
-    );
+let newName =
+prompt(
+"Enter new username:"
+);
 
-    if(!newName) return;
+if(!newName) return;
 
-    username = newName;
+username = newName;
 
-    localStorage.setItem(
-        "kyro_name",
-        username
-    );
+localStorage.setItem(
+"kyro_name",
+username
+);
 
-    alert(
-        "Username changed."
-    );
+alert(
+"Username changed."
+);
 }
 
 function showMyID(){
 
-    alert(
-        "Your ID:\n\n" +
-        myID
-    );
+alert(
+"Your ID:\n\n" +
+myID
+);
 }
 
 function copyMyID(){
 
-    navigator.clipboard.writeText(
-        myID
-    );
+navigator.clipboard.writeText(
+myID
+);
 
-    alert(
-        "ID copied!"
-    );
-}
-
-function clearLocalChats(){
-
-    let sure =
-    confirm(
-        "Clear local chats?"
-    );
-
-    if(!sure) return;
-
-    localChats = {};
-
-    saveAll();
-
-    chat.innerHTML = "";
-
-    alert(
-        "Chats cleared."
-    );
+alert(
+"ID copied!"
+);
 }
 
 </script>
