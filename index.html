@@ -46,7 +46,8 @@ gap:12px;
 }
 
 #menuBtn,
-#settingsBtn{
+#settingsBtn,
+#infoBtn{
 background:none;
 border:none;
 color:white;
@@ -91,7 +92,6 @@ margin:6px 0;
 border-radius:10px;
 word-wrap:break-word;
 position:relative;
-
 transition:transform 0.15s;
 touch-action:pan-y;
 }
@@ -267,6 +267,49 @@ border-bottom:1px solid #2f3b43;
 background:#2a3942;
 }
 
+/* INFO WINDOW */
+
+#infoWindow{
+display:none;
+position:fixed;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+width:90%;
+max-width:400px;
+background:#202c33;
+padding:20px;
+border-radius:15px;
+z-index:2000;
+border:1px solid #2f3b43;
+}
+
+#infoHeader{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:15px;
+}
+
+#closeInfoBtn{
+background:none;
+border:none;
+color:white;
+font-size:20px;
+cursor:pointer;
+}
+
+#lockedBtn{
+width:100%;
+padding:10px;
+border:none;
+background:#00a884;
+color:white;
+border-radius:10px;
+cursor:pointer;
+margin-top:15px;
+}
+
 </style>
 </head>
 
@@ -295,6 +338,42 @@ onclick="createGroup()">
 </button>
 
 <div id="contactList"></div>
+
+</div>
+
+<!-- INFO WINDOW -->
+
+<div id="infoWindow">
+
+<div id="infoHeader">
+
+<h3>
+Info
+</h3>
+
+<button id="closeInfoBtn">
+✕
+</button>
+
+</div>
+
+<div style="line-height:1.7;font-size:14px;">
+
+1. Give your ID (their ID) to the person you want to talk to or get their ID. Press the (3 dash icon) on the top-left side of your phone/PC and click "add contact" and enter your friends ID (example: ID-abcd123) to talk with them.
+
+<br><br>
+
+2. On a mobile smart phone the website is not measured so you might need to scroll down a little bit to find the messaging box.
+
+<br><br>
+
+3. This Website is still in development so expect problems. this Web is made by Armaan Ayan.
+
+</div>
+
+<button id="lockedBtn">
+Locked Section
+</button>
 
 </div>
 
@@ -335,9 +414,17 @@ KyroChat
 
 </div>
 
+<div style="display:flex;gap:10px;">
+
+<button id="infoBtn">
+ℹ
+</button>
+
 <button id="settingsBtn">
 ⚙
 </button>
+
+</div>
 
 </header>
 
@@ -363,7 +450,7 @@ Your ID:
 
 <div id="chat"></div>
 
-<!-- REPLY PREVIEW -->
+<!-- REPLY -->
 
 <div id="replyPreview">
 
@@ -549,6 +636,67 @@ sidebar.classList.remove(
 
 overlay.style.display =
 "none";
+
+document
+.getElementById("settingsMenu")
+.style.display =
+"none";
+};
+
+
+// INFO
+
+document
+.getElementById("infoBtn")
+.onclick = () => {
+
+document
+.getElementById("infoWindow")
+.style.display =
+"block";
+
+overlay.style.display =
+"block";
+};
+
+document
+.getElementById("closeInfoBtn")
+.onclick = () => {
+
+document
+.getElementById("infoWindow")
+.style.display =
+"none";
+
+overlay.style.display =
+"none";
+};
+
+
+// LOCKED SECTION
+
+document
+.getElementById("lockedBtn")
+.onclick = () => {
+
+let pass =
+prompt(
+"Enter Password:"
+);
+
+if(pass === "2811"){
+
+alert(
+"Armaan Ayan's ID: ID-ibq1be5i\n\ntext me anytime"
+);
+}
+
+else{
+
+alert(
+"Wrong Password"
+);
+}
 };
 
 
@@ -768,7 +916,7 @@ text
 };
 
 
-// MOBILE SWIPE REPLY
+// MOBILE SWIPE
 
 let startX = 0;
 let currentX = 0;
@@ -813,7 +961,6 @@ swiping = false;
 
 let moved =
 currentX - startX;
-
 
 if(moved > 80){
 
@@ -862,7 +1009,7 @@ saveAll();
 }
 
 
-// ACTIVATE REPLY
+// REPLY
 
 function activateReply(
 sender,
@@ -889,9 +1036,6 @@ document
 ${text}
 `;
 }
-
-
-// CANCEL REPLY
 
 document
 .getElementById("cancelReply")
