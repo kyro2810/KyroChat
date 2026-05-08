@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>KyroChat V3</title>
+<title>KyroChat V4</title>
 
 <!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
@@ -37,6 +37,7 @@ header{
     align-items:center;
     justify-content:space-between;
     border-bottom:1px solid #2f3b43;
+    z-index:10;
 }
 
 #leftHeader{
@@ -59,13 +60,12 @@ header{
     font-weight:bold;
 }
 
-/* HOME INFO */
+/* TOP INFO */
 
 #chatName{
     background:#111b21;
     padding:12px;
     border-bottom:1px solid #2f3b43;
-    font-size:14px;
     line-height:1.6;
 }
 
@@ -90,6 +90,7 @@ header{
     margin:6px 0;
     border-radius:10px;
     word-wrap:break-word;
+    position:relative;
 }
 
 .me{
@@ -106,6 +107,13 @@ header{
     font-size:11px;
     opacity:0.7;
     margin-bottom:5px;
+}
+
+.deleteBtn{
+    margin-top:8px;
+    font-size:11px;
+    opacity:0.7;
+    cursor:pointer;
 }
 
 /* INPUT */
@@ -137,6 +145,14 @@ header{
 
 /* SIDEBAR */
 
+#overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.4);
+    display:none;
+    z-index:998;
+}
+
 #sidebar{
     position:fixed;
     top:0;
@@ -145,7 +161,7 @@ header{
     height:100%;
     background:#111b21;
     transition:0.25s;
-    z-index:1000;
+    z-index:999;
     overflow-y:auto;
     border-right:1px solid #2f3b43;
 }
@@ -221,6 +237,10 @@ header{
 </head>
 
 <body>
+
+<!-- OVERLAY -->
+
+<div id="overlay"></div>
 
 <!-- SIDEBAR -->
 
@@ -304,7 +324,7 @@ header{
 
 </header>
 
-<!-- HOME INFO -->
+<!-- INFO -->
 
 <div id="chatName">
 
@@ -412,8 +432,6 @@ if(!username){
     );
 }
 
-
-// SHOW ID
 document
 .getElementById("myIDText")
 .innerText = myID;
@@ -457,9 +475,6 @@ document.getElementById("chat");
 const contactList =
 document.getElementById("contactList");
 
-const chatName =
-document.getElementById("chatName");
-
 
 // =======================
 // SAVE
@@ -488,17 +503,31 @@ function saveAll(){
 // SIDEBAR
 // =======================
 
+const sidebar =
+document.getElementById("sidebar");
+
+const overlay =
+document.getElementById("overlay");
+
 document
 .getElementById("menuBtn")
-.addEventListener(
-    "click",
-    function(){
+.onclick = () => {
 
-        document
-        .getElementById("sidebar")
-        .classList.toggle("open");
-    }
-);
+    sidebar.classList.add("open");
+
+    overlay.style.display =
+    "block";
+};
+
+overlay.onclick = () => {
+
+    sidebar.classList.remove(
+        "open"
+    );
+
+    overlay.style.display =
+    "none";
+};
 
 
 // =======================
@@ -507,31 +536,28 @@ document
 
 document
 .getElementById("settingsBtn")
-.addEventListener(
-    "click",
-    function(){
+.onclick = () => {
 
-        const menu =
-        document.getElementById(
-            "settingsMenu"
-        );
+    const menu =
+    document.getElementById(
+        "settingsMenu"
+    );
 
-        if(
-            menu.style.display ===
-            "block"
-        ){
+    if(
+        menu.style.display ===
+        "block"
+    ){
 
-            menu.style.display =
-            "none";
-        }
-
-        else{
-
-            menu.style.display =
-            "block";
-        }
+        menu.style.display =
+        "none";
     }
-);
+
+    else{
+
+        menu.style.display =
+        "block";
+    }
+};
 
 
 // =======================
@@ -554,7 +580,7 @@ function renderContacts(){
         contact.name;
 
 
-        // unread dot
+        // unread
         if(unread[contact.id]){
 
             const dot =
@@ -585,9 +611,12 @@ function renderContacts(){
                 contact.name
             );
 
-            document
-            .getElementById("sidebar")
-            .classList.remove("open");
+            sidebar.classList.remove(
+                "open"
+            );
+
+            overlay.style.display =
+            "none";
         };
 
 
@@ -610,32 +639,6 @@ function renderContacts(){
                 saveAll();
 
                 renderContacts();
-
-                if(
-                    activeChat ===
-                    contact.id
-                ){
-
-                    chatName.innerHTML =
-                    `
-                    ${newName}
-
-                    <br><br>
-
-                    <span style="
-                    font-size:12px;
-                    opacity:0.7;
-                    ">
-                        Your ID:
-                    </span>
-
-                    <br>
-
-                    <span id="myIDText">
-                        ${myID}
-                    </span>
-                    `;
-                }
             }
         };
 
@@ -654,7 +657,9 @@ function openChat(id,name){
 
     chat.innerHTML = "";
 
-    chatName.innerHTML =
+    document
+    .getElementById("chatName")
+    .innerHTML =
     `
     ${name}
 
@@ -685,7 +690,8 @@ function openChat(id,name){
             msg.type,
             msg.sender,
             msg.text,
-            false
+            false,
+            msg.id
         );
     });
 }
@@ -699,7 +705,8 @@ function addMessage(
     type,
     sender,
     text,
-    save=true
+    save=true,
+    messageID=null
 ){
 
     const div =
@@ -708,16 +715,43 @@ function addMessage(
     div.className =
     "msg " + type;
 
+    div.dataset.id =
+    messageID || "";
+
     div.innerHTML =
     `
     <div class="sender">
         ${sender}
     </div>
 
-    <div>
+    <div class="msgText">
         ${text}
     </div>
     `;
+
+
+    // delete button
+    if(type === "me"){
+
+        const del =
+        document.createElement("div");
+
+        del.className =
+        "deleteBtn";
+
+        del.innerText =
+        "Delete for everyone";
+
+        del.onclick = () => {
+
+            deleteMessageForEveryone(
+                div.dataset.id,
+                div
+            );
+        };
+
+        div.appendChild(del);
+    }
 
     chat.appendChild(div);
 
@@ -727,9 +761,7 @@ function addMessage(
 
     if(save && activeChat){
 
-        if(
-            !localChats[activeChat]
-        ){
+        if(!localChats[activeChat]){
 
             localChats[activeChat] =
             [];
@@ -737,6 +769,8 @@ function addMessage(
 
         localChats[activeChat]
         .push({
+
+            id:messageID,
 
             type:type,
 
@@ -751,6 +785,31 @@ function addMessage(
 
         saveAll();
     }
+}
+
+
+// =======================
+// DELETE MESSAGE
+// =======================
+
+function deleteMessageForEveryone(
+    messageID,
+    div
+){
+
+    if(!messageID) return;
+
+    db.ref(
+        "deleted/" +
+        activeChat +
+        "/" +
+        messageID
+    ).set(true);
+
+    div.querySelector(
+        ".msgText"
+    ).innerText =
+    "This message was deleted";
 }
 
 
@@ -773,7 +832,6 @@ function addContact(){
     );
 
     if(!name) return;
-
 
     contacts.push({
 
@@ -826,10 +884,17 @@ function sendMsg(){
     if(!text) return;
 
 
+    const messageID =
+    "msg-" +
+    Date.now();
+
+
     db.ref(
         "messages/" +
         activeChat
     ).push({
+
+        id:messageID,
 
         sender: username,
 
@@ -844,7 +909,9 @@ function sendMsg(){
     addMessage(
         "me",
         "You",
-        text
+        text,
+        true,
+        messageID
     );
 
     input.value = "";
@@ -886,7 +953,7 @@ db.ref(
     snapshot.val();
 
 
-    // auto add contact
+    // auto contact
     let exists =
     contacts.find(
         c =>
@@ -904,12 +971,10 @@ db.ref(
     }
 
 
-    // unread
     unread[data.senderID] =
     true;
 
 
-    // local save
     if(
         !localChats[data.senderID]
     ){
@@ -920,6 +985,8 @@ db.ref(
 
     localChats[data.senderID]
     .push({
+
+        id:data.id,
 
         type:"other",
 
@@ -935,7 +1002,6 @@ db.ref(
     saveAll();
 
 
-    // if active
     if(
         activeChat ===
         data.senderID
@@ -952,7 +1018,9 @@ db.ref(
 
             data.text,
 
-            false
+            false,
+
+            data.id
         );
 
         unread[data.senderID] =
@@ -962,13 +1030,49 @@ db.ref(
     renderContacts();
 
 
-    // delete relay
+    // listen for deletes
+    db.ref(
+        "deleted/" +
+        myID +
+        "/" +
+        data.id
+    ).on(
+        "value",
+        snap => {
+
+        if(snap.exists()){
+
+            document
+            .querySelectorAll(".msg")
+            .forEach(msg => {
+
+                if(
+                    msg.dataset.id ===
+                    data.id
+                ){
+
+                    const txt =
+                    msg.querySelector(
+                        ".msgText"
+                    );
+
+                    if(txt){
+
+                        txt.innerText =
+                        "This message was deleted";
+                    }
+                }
+            });
+        }
+    });
+
+
     snapshot.ref.remove();
 });
 
 
 // =======================
-// SETTINGS FUNCTIONS
+// SETTINGS
 // =======================
 
 function changeName(){
@@ -1013,12 +1117,12 @@ function copyMyID(){
 
 function clearLocalChats(){
 
-    let confirmClear =
+    let sure =
     confirm(
         "Clear local chats?"
     );
 
-    if(!confirmClear) return;
+    if(!sure) return;
 
     localChats = {};
 
@@ -1027,7 +1131,7 @@ function clearLocalChats(){
     chat.innerHTML = "";
 
     alert(
-        "Local chats cleared."
+        "Chats cleared."
     );
 }
 
