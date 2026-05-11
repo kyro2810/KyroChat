@@ -1,8 +1,20 @@
-<!-- =========================
-KYROCHAT ULTRA DARK UI UPDATE
-========================= -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+<title>KyroChat</title>
+
+<!-- FIREBASE -->
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
 
 <style>
+
+/* =========================
+GLOBAL
+========================= */
 
 html{
 scroll-behavior:smooth;
@@ -31,31 +43,19 @@ HEADER
 header{
 height:60px;
 background:#111b21;
-border-bottom:1px solid rgba(255,255,255,0.15);
+border-bottom:1px solid rgba(255,255,255,0.12);
 display:flex;
 align-items:center;
 justify-content:space-between;
 padding:0 15px;
-box-shadow:
-0 0 10px rgba(255,255,255,0.05);
-z-index:50;
+box-shadow:0 0 10px rgba(255,255,255,0.05);
+z-index:20;
 }
 
-#topTitle{
-font-size:18px;
-font-weight:bold;
-cursor:pointer;
-transition:0.2s;
-}
-
-#topTitle:hover{
-opacity:0.8;
-}
-
-#leftTop{
+#leftHeader{
 display:flex;
 align-items:center;
-gap:12px;
+gap:14px;
 }
 
 #menuBtn,
@@ -75,8 +75,14 @@ transition:0.2s;
 transform:scale(1.1);
 }
 
+#chatTitle{
+font-size:18px;
+font-weight:bold;
+cursor:pointer;
+}
+
 /* =========================
-CHAT
+CHAT AREA
 ========================= */
 
 #chat{
@@ -91,7 +97,7 @@ background:
 linear-gradient(
 180deg,
 #0b141a,
-#0f1d25
+#101d24
 );
 }
 
@@ -100,15 +106,16 @@ MESSAGES
 ========================= */
 
 .msg{
-max-width:78%;
+max-width:80%;
 padding:10px 12px;
 border-radius:18px;
 word-wrap:break-word;
-animation:msgFade 0.2s ease;
-position:relative;
 border:1px solid rgba(255,255,255,0.08);
 box-shadow:
-0 0 8px rgba(255,255,255,0.03);
+0 0 10px rgba(255,255,255,0.03);
+animation:msgFade 0.2s ease;
+position:relative;
+touch-action:pan-y;
 }
 
 @keyframes msgFade{
@@ -126,24 +133,47 @@ transform:translateY(0);
 }
 
 .me{
-align-self:flex-end;
 background:#005c4b;
+align-self:flex-end;
 }
 
 .other{
-align-self:flex-start;
 background:#1f2c34;
+align-self:flex-start;
 }
 
 .sender{
 font-size:11px;
 opacity:0.7;
-margin-bottom:5px;
+margin-bottom:4px;
+}
+
+.replyBox{
+font-size:12px;
+padding:6px;
+margin-bottom:6px;
+border-left:3px solid #00a884;
+background:rgba(255,255,255,0.05);
+border-radius:8px;
 }
 
 /* =========================
 BOTTOM BAR
 ========================= */
+
+#replyPreview{
+display:none;
+padding:8px 12px;
+background:#162028;
+border-top:
+1px solid rgba(255,255,255,0.1);
+font-size:13px;
+}
+
+#replyTop{
+color:#00a884;
+margin-bottom:4px;
+}
 
 #bottom{
 padding:10px;
@@ -151,8 +181,6 @@ display:flex;
 gap:8px;
 background:#111b21;
 border-top:1px solid rgba(255,255,255,0.12);
-position:sticky;
-bottom:0;
 }
 
 #message{
@@ -177,10 +205,10 @@ background:#00a884;
 border:none;
 padding:12px 18px;
 color:white;
-border-radius:14px;
+border-radius:15px;
+font-weight:bold;
 cursor:pointer;
 transition:0.2s;
-font-weight:bold;
 }
 
 #sendBtn:hover{
@@ -199,12 +227,12 @@ width:280px;
 height:100%;
 background:#111b21;
 border-right:
-1px solid rgba(255,255,255,0.15);
+1px solid rgba(255,255,255,0.12);
 transition:0.25s ease;
-z-index:200;
+z-index:100;
 overflow-y:auto;
 box-shadow:
-0 0 15px rgba(255,255,255,0.04);
+0 0 15px rgba(255,255,255,0.05);
 }
 
 #sidebar.open{
@@ -213,7 +241,7 @@ left:0;
 
 #sidebarHeader{
 padding:18px;
-font-size:20px;
+font-size:22px;
 font-weight:bold;
 border-bottom:
 1px solid rgba(255,255,255,0.1);
@@ -222,7 +250,7 @@ border-bottom:
 .sideBtn{
 width:100%;
 padding:14px;
-background:#1a262e;
+background:#1b2730;
 border:none;
 color:white;
 text-align:left;
@@ -233,20 +261,20 @@ transition:0.2s;
 }
 
 .sideBtn:hover{
-background:#22313b;
+background:#23323c;
 }
 
 .contact{
-padding:14px;
-cursor:pointer;
+padding:15px;
 border-bottom:
 1px solid rgba(255,255,255,0.08);
-transition:0.2s;
+cursor:pointer;
 position:relative;
+transition:0.2s;
 }
 
 .contact:hover{
-background:#22313b;
+background:#23323c;
 }
 
 .redDot{
@@ -256,9 +284,8 @@ background:red;
 border-radius:50%;
 position:absolute;
 right:15px;
-top:18px;
-box-shadow:
-0 0 10px red;
+top:20px;
+box-shadow:0 0 10px red;
 }
 
 /* =========================
@@ -270,12 +297,11 @@ position:fixed;
 inset:0;
 background:rgba(0,0,0,0.45);
 display:none;
-z-index:150;
-backdrop-filter:blur(2px);
+z-index:90;
 }
 
 /* =========================
-INFO WINDOW
+POPUPS
 ========================= */
 
 .popup{
@@ -283,32 +309,21 @@ position:fixed;
 top:50%;
 left:50%;
 transform:
-translate(-50%,-50%)
-scale(0.95);
-
+translate(-50%,-50%);
 width:90%;
 max-width:420px;
-
 background:#111b21;
-
-border:
-1px solid rgba(255,255,255,0.15);
-
+border:1px solid rgba(255,255,255,0.15);
 border-radius:18px;
-
 padding:20px;
-
 display:none;
-
-z-index:500;
-
-animation:popupAnim 0.18s ease forwards;
-
+z-index:200;
 box-shadow:
 0 0 20px rgba(255,255,255,0.06);
+animation:pop 0.18s ease;
 }
 
-@keyframes popupAnim{
+@keyframes pop{
 
 from{
 opacity:0;
@@ -342,45 +357,22 @@ cursor:pointer;
 }
 
 .popup button{
+margin-top:12px;
+width:100%;
+padding:12px;
 background:#00a884;
 border:none;
-padding:10px;
-color:white;
 border-radius:12px;
-width:100%;
-margin-top:15px;
+color:white;
 cursor:pointer;
 }
 
-/* =========================
-REPLY BOX
-========================= */
-
-#replyPreview{
-display:none;
-background:#162028;
-padding:8px 12px;
-border-top:
-1px solid rgba(255,255,255,0.1);
-font-size:13px;
-}
-
-#replyTop{
-color:#00a884;
-margin-bottom:4px;
-}
-
-/* =========================
-GROUP SETTINGS
-========================= */
-
 .member{
 padding:10px;
-background:#1b2730;
 margin-top:8px;
+background:#1f2c34;
 border-radius:10px;
-border:
-1px solid rgba(255,255,255,0.08);
+border:1px solid rgba(255,255,255,0.08);
 }
 
 /* =========================
@@ -400,101 +392,561 @@ padding:0 10px;
 }
 
 </style>
+</head>
+
+<body>
+
+<!-- =========================
+HEADER
+========================= -->
+
+<header>
+
+<div id="leftHeader">
+
+<button id="menuBtn">
+☰
+</button>
+
+<div id="chatTitle">
+KyroChat
+</div>
+
+</div>
+
+<div>
+
+<button id="infoBtn">
+ⓘ
+</button>
+
+<button id="settingsBtn">
+⚙
+</button>
+
+</div>
+
+</header>
+
+<!-- =========================
+SIDEBAR
+========================= -->
+
+<div id="sidebar">
+
+<div id="sidebarHeader">
+KyroChat
+</div>
+
+<button class="sideBtn" onclick="addContact()">
+➕ Add Contact
+</button>
+
+<button class="sideBtn" onclick="createGroup()">
+👥 Create Group
+</button>
+
+<div id="contactList"></div>
+
+</div>
+
+<!-- =========================
+OVERLAY
+========================= -->
+
+<div id="overlay"></div>
+
+<!-- =========================
+CHAT
+========================= -->
+
+<div id="chat"></div>
+
+<!-- =========================
+REPLY PREVIEW
+========================= -->
+
+<div id="replyPreview">
+
+<div id="replyTop"></div>
+
+<div id="replyText"></div>
+
+</div>
+
+<!-- =========================
+BOTTOM
+========================= -->
+
+<div id="bottom">
+
+<input
+id="message"
+placeholder="Enter message..."
+autocomplete="off"
+>
+
+<button id="sendBtn">
+Send
+</button>
+
+</div>
+
+<!-- =========================
+INFO POPUP
+========================= -->
+
+<div class="popup" id="infoPopup">
+
+<div class="popupTop">
+
+<h3>Info</h3>
+
+<button class="closeBtn"
+onclick="closePopup('infoPopup')">
+✕
+</button>
+
+</div>
+
+<p>
+1. Give your ID to the person you want to talk to or get their ID.
+Press the ☰ icon and click "Add Contact".
+</p>
+
+<br>
+
+<p>
+2. Mobile layout is still improving.
+</p>
+
+<br>
+
+<p>
+3. This website is still in development so expect problems.
+This web is made by Armaan Ayan.
+</p>
+
+<button onclick="openLocked()">
+Locked Section
+</button>
+
+</div>
+
+<!-- =========================
+GROUP SETTINGS
+========================= -->
+
+<div class="popup" id="groupPopup">
+
+<div class="popupTop">
+
+<h3>Group Settings</h3>
+
+<button class="closeBtn"
+onclick="closePopup('groupPopup')">
+✕
+</button>
+
+</div>
+
+<div id="groupMembers"></div>
+
+<button onclick="addPeople()">
+➕ Add People
+</button>
+
+<button onclick="removePeople()">
+➖ Remove People
+</button>
+
+</div>
 
 <script>
 
 /* =========================
-MOBILE FIX
+FIREBASE
 ========================= */
 
-window.addEventListener(
-"resize",
-() => {
+const firebaseConfig = {
 
-document.body.style.height =
-window.innerHeight + "px";
+apiKey: "AIzaSyDBzZ97kqHW9gcCW_ObNvpCNlW1VTGiDxs",
+
+authDomain: "kyrochat.firebaseapp.com",
+
+databaseURL:
+"https://kyrochat-default-rtdb.asia-southeast1.firebasedatabase.app/",
+
+projectId: "kyrochat",
+
+storageBucket:
+"kyrochat.firebasestorage.app",
+
+messagingSenderId:
+"360761453559",
+
+appId:
+"1:360761453559:web:2138c9c2e83512ace85cf2"
+
+};
+
+firebase.initializeApp(firebaseConfig);
+
+const db = firebase.database();
+
+/* =========================
+USER
+========================= */
+
+let myID =
+localStorage.getItem("kyro_id");
+
+if(!myID){
+
+myID =
+"ID-" +
+Math.random()
+.toString(36)
+.substring(2,10);
+
+localStorage.setItem(
+"kyro_id",
+myID
+);
 }
+
+let username =
+localStorage.getItem("kyro_name");
+
+if(!username){
+
+username =
+prompt("Enter username:");
+
+localStorage.setItem(
+"kyro_name",
+username
+);
+}
+
+/* =========================
+DATA
+========================= */
+
+let contacts =
+JSON.parse(
+localStorage.getItem(
+"kyro_contacts"
+)
+) || [];
+
+let groups =
+JSON.parse(
+localStorage.getItem(
+"kyro_groups"
+)
+) || [];
+
+let currentChat = null;
+
+let currentType = "dm";
+
+let replyData = null;
+
+/* =========================
+ELEMENTS
+========================= */
+
+const sidebar =
+document.getElementById("sidebar");
+
+const overlay =
+document.getElementById("overlay");
+
+const contactList =
+document.getElementById("contactList");
+
+const chat =
+document.getElementById("chat");
+
+const messageInput =
+document.getElementById("message");
+
+const chatTitle =
+document.getElementById("chatTitle");
+
+/* =========================
+SIDEBAR
+========================= */
+
+document
+.getElementById("menuBtn")
+.onclick = () => {
+
+sidebar.classList.add("open");
+
+overlay.style.display = "block";
+};
+
+overlay.onclick = () => {
+
+sidebar.classList.remove("open");
+
+overlay.style.display = "none";
+
+closePopup("infoPopup");
+
+closePopup("groupPopup");
+};
+
+/* =========================
+RENDER CONTACTS
+========================= */
+
+function renderContacts(){
+
+contactList.innerHTML = "";
+
+contacts.forEach(c => {
+
+let div =
+document.createElement("div");
+
+div.className = "contact";
+
+div.innerHTML = `
+${c.name}
+`;
+
+div.onclick = () => {
+
+openDM(c);
+
+};
+
+contactList.appendChild(div);
+});
+
+groups.forEach(g => {
+
+let div =
+document.createElement("div");
+
+div.className = "contact";
+
+div.innerHTML =
+"👥 " + g.name;
+
+div.onclick = () => {
+
+openGroup(g);
+
+};
+
+contactList.appendChild(div);
+});
+}
+
+renderContacts();
+
+/* =========================
+ADD CONTACT
+========================= */
+
+function addContact(){
+
+let id =
+prompt("Enter Friend ID:");
+
+if(!id) return;
+
+let name =
+prompt("Save as:");
+
+if(!name) return;
+
+contacts.push({
+
+id,
+name
+});
+
+localStorage.setItem(
+"kyro_contacts",
+JSON.stringify(contacts)
 );
 
+renderContacts();
+}
+
 /* =========================
-ENTER TO SEND
+CREATE GROUP
 ========================= */
 
-document
-.getElementById("message")
-.addEventListener(
-"keypress",
-e => {
+function createGroup(){
 
-if(e.key === "Enter"){
+let name =
+prompt("Group name:");
 
-sendMsg();
-}
-}
+if(!name) return;
+
+let groupID =
+"GROUP-" +
+Math.random()
+.toString(36)
+.substring(2,8);
+
+let group = {
+
+id:groupID,
+
+name:name,
+
+members:[myID]
+};
+
+groups.push(group);
+
+localStorage.setItem(
+"kyro_groups",
+JSON.stringify(groups)
 );
 
+db.ref(
+"groups/" + groupID
+).set(group);
+
+renderContacts();
+}
+
 /* =========================
-SMOOTH SIDEBAR
+OPEN DM
 ========================= */
 
-function openSidebar(){
+function openDM(c){
 
-document
-.getElementById("sidebar")
-.classList.add("open");
+currentChat = c.id;
 
-document
-.getElementById("overlay")
-.style.display = "block";
-}
+currentType = "dm";
 
-function closeSidebar(){
+chat.innerHTML = "";
 
-document
-.getElementById("sidebar")
-.classList.remove("open");
+chatTitle.innerText =
+c.name;
 
-document
-.getElementById("overlay")
-.style.display = "none";
+sidebar.classList.remove("open");
+
+overlay.style.display = "none";
+
+listenDM();
 }
 
 /* =========================
-INFO POPUP
+OPEN GROUP
 ========================= */
 
-function openInfo(){
+function openGroup(g){
 
-document
-.getElementById("infoPopup")
-.style.display = "block";
+currentChat = g.id;
 
-document
-.getElementById("overlay")
-.style.display = "block";
-}
+currentType = "group";
 
-function closeInfo(){
+chat.innerHTML = "";
 
-document
-.getElementById("infoPopup")
-.style.display = "none";
+chatTitle.innerText =
+g.name;
 
-document
-.getElementById("overlay")
-.style.display = "none";
+sidebar.classList.remove("open");
+
+overlay.style.display = "none";
+
+renderMembers(g);
+
+listenGroup();
 }
 
 /* =========================
-LOCKED SECTION
+GROUP SETTINGS
+========================= */
+
+chatTitle.onclick = () => {
+
+if(currentType === "group"){
+
+openPopup("groupPopup");
+}
+};
+
+function renderMembers(g){
+
+let div =
+document.getElementById(
+"groupMembers"
+);
+
+div.innerHTML = "";
+
+g.members.forEach(m => {
+
+div.innerHTML += `
+<div class="member">
+${m}
+</div>
+`;
+});
+}
+
+function addPeople(){
+
+alert(
+"Future update 😭"
+);
+}
+
+function removePeople(){
+
+alert(
+"Future update 😭"
+);
+}
+
+/* =========================
+POPUPS
+========================= */
+
+function openPopup(id){
+
+document
+.getElementById(id)
+.style.display = "block";
+
+overlay.style.display = "block";
+}
+
+function closePopup(id){
+
+document
+.getElementById(id)
+.style.display = "none";
+
+overlay.style.display = "none";
+}
+
+document
+.getElementById("infoBtn")
+.onclick = () => {
+
+openPopup("infoPopup");
+};
+
+/* =========================
+LOCKED
 ========================= */
 
 function openLocked(){
 
 let pass =
-prompt(
-"Enter Password:"
-);
+prompt("Password:");
 
 if(pass === "2811"){
 
@@ -507,115 +959,311 @@ alert(
 
 else{
 
-alert("Wrong Password");
+alert("Wrong password");
 }
 }
 
 /* =========================
-GROUP SETTINGS
+MESSAGES
 ========================= */
 
-function openGroupSettings(){
+function addMessage(
+type,
+sender,
+text,
+reply=null
+){
 
-document
-.getElementById("groupPopup")
-.style.display = "block";
+let div =
+document.createElement("div");
 
-document
-.getElementById("overlay")
-.style.display = "block";
+div.className =
+"msg " + type;
+
+let replyHTML = "";
+
+if(reply){
+
+replyHTML = `
+<div class="replyBox">
+${reply.sender}: ${reply.text}
+</div>
+`;
 }
 
-function closeGroupSettings(){
+div.innerHTML = `
 
-document
-.getElementById("groupPopup")
-.style.display = "none";
+<div class="sender">
+${sender}
+</div>
 
-document
-.getElementById("overlay")
-.style.display = "none";
-}
+${replyHTML}
+
+<div>
+${text}
+</div>
+
+`;
 
 /* =========================
-TOP TITLE CLICK
+SWIPE REPLY
 ========================= */
 
-document
-.getElementById("topTitle")
-.onclick = () => {
+let startX = 0;
 
-if(currentChatType === "group"){
+div.addEventListener(
+"touchstart",
+e => {
 
-openGroupSettings();
+startX =
+e.touches[0].clientX;
 }
+);
+
+div.addEventListener(
+"touchend",
+e => {
+
+let endX =
+e.changedTouches[0].clientX;
+
+if(endX - startX > 70){
+
+replyData = {
+
+sender,
+text
 };
 
-/* =========================
-ADD PEOPLE
-========================= */
+document
+.getElementById(
+"replyPreview"
+)
+.style.display = "block";
 
-function addPeople(){
+document
+.getElementById(
+"replyTop"
+)
+.innerText =
+"Replying to " +
+sender;
 
-let id =
-prompt(
-"Enter Friend ID:"
+document
+.getElementById(
+"replyText"
+)
+.innerText = text;
+}
+}
 );
 
-if(!id) return;
+chat.appendChild(div);
 
-alert(
-id + " added to group."
-);
+chat.scrollTop =
+chat.scrollHeight;
 }
 
 /* =========================
-REMOVE PEOPLE
+SEND
 ========================= */
 
-function removePeople(){
+function sendMsg(){
 
-let id =
-prompt(
-"Enter ID to remove:"
+if(!currentChat) return;
+
+let text =
+messageInput.value.trim();
+
+if(!text) return;
+
+let data = {
+
+sender:username,
+
+senderID:myID,
+
+text:text,
+
+time:Date.now(),
+
+reply:replyData
+};
+
+if(currentType === "dm"){
+
+db.ref(
+"messages/" +
+currentChat
+).push(data);
+}
+
+else{
+
+db.ref(
+"groups/" +
+currentChat +
+"/messages"
+).push(data);
+}
+
+addMessage(
+"me",
+"You",
+text,
+replyData
 );
 
-if(!id) return;
+messageInput.value = "";
 
-alert(
-id + " removed."
-);
+replyData = null;
+
+document
+.getElementById(
+"replyPreview"
+)
+.style.display = "none";
 }
 
 /* =========================
-MESSAGE LIMITS
+ENTER SEND
 ========================= */
 
-/*
-DMs:
-35 messages
+messageInput
+.addEventListener(
+"keypress",
+e => {
 
-Groups:
-100 messages
-*/
+if(e.key === "Enter"){
+
+sendMsg();
+}
+}
+);
+
+document
+.getElementById("sendBtn")
+.onclick = sendMsg;
 
 /* =========================
-REPLY SWIPE
+LISTEN DM
 ========================= */
 
-/*
-Swipe right on mobile
-to reply
-*/
+function listenDM(){
+
+db.ref(
+"messages/" +
+myID
+)
+.off();
+
+db.ref(
+"messages/" +
+myID
+)
+.on(
+"child_added",
+snapshot => {
+
+let data =
+snapshot.val();
+
+if(
+data.senderID ===
+currentChat
+){
+
+addMessage(
+
+"other",
+
+data.sender,
+
+data.text,
+
+data.reply
+
+);
+}
+
+snapshot.ref.remove();
+});
+}
 
 /* =========================
-WHITE OUTLINE THEME
+LISTEN GROUP
 ========================= */
 
-/*
-Already added throughout UI
-using rgba white borders
-and glow shadows 😭🔥
-*/
+function listenGroup(){
+
+db.ref(
+"groups/" +
+currentChat +
+"/messages"
+)
+.off();
+
+db.ref(
+"groups/" +
+currentChat +
+"/messages"
+)
+.on(
+"child_added",
+snapshot => {
+
+let data =
+snapshot.val();
+
+if(
+data.senderID !== myID
+){
+
+addMessage(
+
+"other",
+
+data.sender,
+
+data.text,
+
+data.reply
+
+);
+}
+});
+}
+
+/* =========================
+SHOW MY ID
+========================= */
+
+chat.innerHTML = `
+
+<div style="
+text-align:center;
+opacity:0.7;
+margin-top:40px;
+line-height:1.8;
+">
+
+<h2>
+KyroChat
+</h2>
+
+<br>
+
+${username}
+
+<br>
+
+${myID}
+
+</div>
+
+`;
 
 </script>
+
+</body>
+</html>
