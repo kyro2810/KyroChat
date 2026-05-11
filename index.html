@@ -42,7 +42,6 @@ align-items:center;
 justify-content:space-between;
 padding:0 15px;
 border-bottom:1px solid rgba(255,255,255,0.1);
-box-shadow:0 0 10px rgba(255,255,255,0.05);
 }
 
 #leftHeader{
@@ -52,25 +51,18 @@ gap:12px;
 }
 
 #menuBtn,
-#infoBtn,
-#settingsBtn{
+#infoBtn{
 background:none;
 border:none;
 color:white;
 font-size:22px;
 cursor:pointer;
-transition:0.2s;
-}
-
-#menuBtn:hover,
-#infoBtn:hover,
-#settingsBtn:hover{
-transform:scale(1.1);
 }
 
 #chatTitle{
 font-size:18px;
 font-weight:bold;
+cursor:pointer;
 }
 
 /* SIDEBAR */
@@ -108,7 +100,6 @@ color:white;
 text-align:left;
 cursor:pointer;
 border-bottom:1px solid rgba(255,255,255,0.08);
-transition:0.2s;
 }
 
 .sideBtn:hover{
@@ -120,21 +111,10 @@ padding:15px;
 border-bottom:1px solid rgba(255,255,255,0.08);
 cursor:pointer;
 transition:0.2s;
-position:relative;
 }
 
 .contact:hover{
 background:#23323c;
-}
-
-.redDot{
-width:10px;
-height:10px;
-background:red;
-border-radius:50%;
-position:absolute;
-right:15px;
-top:20px;
 }
 
 /* OVERLAY */
@@ -172,7 +152,6 @@ padding:10px 12px;
 border-radius:18px;
 word-wrap:break-word;
 border:1px solid rgba(255,255,255,0.08);
-box-shadow:0 0 8px rgba(255,255,255,0.03);
 animation:fade 0.2s ease;
 }
 
@@ -206,6 +185,8 @@ opacity:0.7;
 margin-bottom:5px;
 }
 
+/* REPLY */
+
 .replyBox{
 background:rgba(255,255,255,0.05);
 padding:6px;
@@ -214,8 +195,6 @@ border-radius:8px;
 margin-bottom:6px;
 font-size:12px;
 }
-
-/* REPLY */
 
 #replyPreview{
 display:none;
@@ -228,11 +207,6 @@ border-top:1px solid rgba(255,255,255,0.1);
 color:#00a884;
 font-size:13px;
 margin-bottom:4px;
-}
-
-#replyText{
-font-size:12px;
-opacity:0.8;
 }
 
 /* BOTTOM */
@@ -256,10 +230,6 @@ border-radius:15px;
 font-size:15px;
 }
 
-#message:focus{
-border-color:#00a884;
-}
-
 #sendBtn{
 background:#00a884;
 border:none;
@@ -270,7 +240,7 @@ font-weight:bold;
 cursor:pointer;
 }
 
-/* POPUPS */
+/* POPUP */
 
 .popup{
 position:fixed;
@@ -280,7 +250,7 @@ transform:translate(-50%,-50%);
 width:90%;
 max-width:420px;
 background:#111b21;
-border:1px solid rgba(255,255,255,0.12);
+border:1px solid rgba(255,255,255,0.1);
 border-radius:18px;
 padding:20px;
 display:none;
@@ -311,13 +281,6 @@ border:none;
 border-radius:12px;
 color:white;
 cursor:pointer;
-}
-
-.member{
-padding:10px;
-margin-top:8px;
-background:#1f2c34;
-border-radius:10px;
 }
 
 /* MOBILE */
@@ -351,17 +314,9 @@ KyroChat
 
 </div>
 
-<div>
-
 <button id="infoBtn">
 ⓘ
 </button>
-
-<button id="settingsBtn">
-⚙
-</button>
-
-</div>
 
 </header>
 
@@ -393,16 +348,9 @@ KyroChat
 
 <div id="chat">
 
-<div style="
-text-align:center;
-opacity:0.7;
-margin-top:50px;
-line-height:1.8;
-">
+<div style="text-align:center;opacity:0.7;margin-top:50px;line-height:1.8;">
 
-<h2>
-KyroChat
-</h2>
+<h2>KyroChat</h2>
 
 <br>
 
@@ -438,7 +386,7 @@ Send
 
 </div>
 
-<!-- INFO -->
+<!-- INFO POPUP -->
 
 <div class="popup" id="infoPopup">
 
@@ -455,53 +403,24 @@ onclick="closePopup('infoPopup')">
 </div>
 
 <p>
-1. Give your ID to the person you want to talk to or get their ID.
-Press the ☰ icon and click "Add Contact".
+1. Give your ID to the person you want to talk to.
+Use Add Contact in the ☰ menu.
 </p>
 
 <br>
 
 <p>
-2. On mobile you may need small scrolling depending on device.
+2. This website is still in development.
 </p>
 
 <br>
 
 <p>
-3. This website is still in development so expect problems.
-This web is made by Armaan Ayan.
+Made by Armaan Ayan.
 </p>
 
 <button onclick="openLocked()">
 Locked Section
-</button>
-
-</div>
-
-<!-- GROUP -->
-
-<div class="popup" id="groupPopup">
-
-<div class="popupTop">
-
-<h3>Group Settings</h3>
-
-<button
-class="closeBtn"
-onclick="closePopup('groupPopup')">
-✕
-</button>
-
-</div>
-
-<div id="groupMembers"></div>
-
-<button onclick="addPeople()">
-➕ Add People
-</button>
-
-<button onclick="removePeople()">
-➖ Remove People
 </button>
 
 </div>
@@ -635,10 +554,9 @@ sidebar.classList.remove("open");
 overlay.style.display = "none";
 
 closePopup("infoPopup");
-closePopup("groupPopup");
 };
 
-/* POPUPS */
+/* POPUP */
 
 function openPopup(id){
 
@@ -687,28 +605,7 @@ alert("Wrong password");
 
 /* CONTACTS */
 
-function renderContacts(){
-
-contactList.innerHTML = "";
-
-contacts.forEach(c => {
-
-let div =
-document.createElement("div");
-
-div.className = "contact";
-
-div.innerText = c.name;
-
-div.onclick = () => {
-
-openDM(c);
-};
-
-contactList.appendChild(div);
-});
-
-groups.forEach(g => {
+function createContactElement(data,type){
 
 let div =
 document.createElement("div");
@@ -716,18 +613,180 @@ document.createElement("div");
 div.className = "contact";
 
 div.innerText =
-"👥 " + g.name;
+type === "group"
+? "👥 " + data.name
+: data.name;
 
 div.onclick = () => {
 
-openGroup(g);
+if(type === "group"){
+
+openGroup(data);
+}
+
+else{
+
+openDM(data);
+}
 };
 
-contactList.appendChild(div);
+/* HOLD MENU */
+
+let holdTimer;
+
+div.addEventListener(
+"mousedown",
+() => {
+
+holdTimer =
+setTimeout(() => {
+
+manageItem(data,type);
+
+},700);
+}
+);
+
+div.addEventListener(
+"mouseup",
+() => {
+
+clearTimeout(holdTimer);
+}
+);
+
+div.addEventListener(
+"touchstart",
+() => {
+
+holdTimer =
+setTimeout(() => {
+
+manageItem(data,type);
+
+},700);
+}
+);
+
+div.addEventListener(
+"touchend",
+() => {
+
+clearTimeout(holdTimer);
+}
+);
+
+return div;
+}
+
+function renderContacts(){
+
+contactList.innerHTML = "";
+
+contacts.forEach(c => {
+
+contactList.appendChild(
+
+createContactElement(
+c,
+"contact"
+)
+
+);
+});
+
+groups.forEach(g => {
+
+contactList.appendChild(
+
+createContactElement(
+g,
+"group"
+)
+
+);
 });
 }
 
 renderContacts();
+
+/* MANAGE */
+
+function manageItem(data,type){
+
+if(type === "group"){
+
+let action =
+prompt(
+"Type:\nrename\nremove"
+);
+
+if(action === "rename"){
+
+let newName =
+prompt("New group name:");
+
+if(!newName) return;
+
+data.name = newName;
+
+localStorage.setItem(
+"kyro_groups",
+JSON.stringify(groups)
+);
+
+renderContacts();
+
+if(currentChat === data.id){
+
+chatTitle.innerText =
+newName;
+}
+}
+
+if(action === "remove"){
+
+groups =
+groups.filter(
+g => g.id !== data.id
+);
+
+localStorage.setItem(
+"kyro_groups",
+JSON.stringify(groups)
+);
+
+renderContacts();
+
+alert("Group removed");
+}
+}
+
+else{
+
+let action =
+prompt(
+"Type:\nremove"
+);
+
+if(action === "remove"){
+
+contacts =
+contacts.filter(
+c => c.id !== data.id
+);
+
+localStorage.setItem(
+"kyro_contacts",
+JSON.stringify(contacts)
+);
+
+renderContacts();
+
+alert("Contact removed");
+}
+}
+}
 
 /* ADD CONTACT */
 
@@ -739,7 +798,7 @@ prompt("Enter Friend ID:");
 if(!id) return;
 
 let name =
-prompt("Save contact as:");
+prompt("Save as:");
 
 if(!name) return;
 
@@ -785,14 +844,10 @@ localStorage.setItem(
 JSON.stringify(groups)
 );
 
-db.ref(
-"groups/" + groupID
-).set(group);
-
 renderContacts();
 }
 
-/* OPEN DM */
+/* OPEN CHAT */
 
 function openDM(c){
 
@@ -812,8 +867,6 @@ overlay.style.display = "none";
 listenDM();
 }
 
-/* OPEN GROUP */
-
 function openGroup(g){
 
 currentChat = g.id;
@@ -829,55 +882,10 @@ sidebar.classList.remove("open");
 
 overlay.style.display = "none";
 
-renderMembers(g);
-
 listenGroup();
 }
 
-/* GROUP SETTINGS */
-
-chatTitle.onclick = () => {
-
-if(currentType === "group"){
-
-openPopup("groupPopup");
-}
-};
-
-function renderMembers(g){
-
-let div =
-document.getElementById(
-"groupMembers"
-);
-
-div.innerHTML = "";
-
-g.members.forEach(m => {
-
-div.innerHTML += `
-<div class="member">
-${m}
-</div>
-`;
-});
-}
-
-function addPeople(){
-
-alert(
-"Coming soon 😭"
-);
-}
-
-function removePeople(){
-
-alert(
-"Coming soon 😭"
-);
-}
-
-/* ADD MESSAGE */
+/* MESSAGE */
 
 function addMessage(
 type,
@@ -915,8 +923,6 @@ ${replyHTML}
 ${text}
 </div>
 `;
-
-/* SWIPE REPLY */
 
 let startX = 0;
 
@@ -992,9 +998,9 @@ senderID:myID,
 
 text:text,
 
-time:Date.now(),
+reply:replyData,
 
-reply:replyData
+time:Date.now()
 };
 
 if(currentType === "dm"){
@@ -1009,8 +1015,7 @@ else{
 
 db.ref(
 "groups/" +
-currentChat +
-"/messages"
+currentChat
 ).push(data);
 }
 
@@ -1032,8 +1037,6 @@ document
 .style.display = "none";
 }
 
-/* SEND EVENTS */
-
 document
 .getElementById("sendBtn")
 .onclick = sendMsg;
@@ -1050,7 +1053,7 @@ sendMsg();
 }
 );
 
-/* LISTEN DM */
+/* LISTEN */
 
 function listenDM(){
 
@@ -1077,34 +1080,26 @@ currentChat
 ){
 
 addMessage(
-
 "other",
-
 data.sender,
-
 data.text,
-
 data.reply
 );
 }
 });
 }
 
-/* LISTEN GROUP */
-
 function listenGroup(){
 
 db.ref(
 "groups/" +
-currentChat +
-"/messages"
+currentChat
 )
 .off();
 
 db.ref(
 "groups/" +
-currentChat +
-"/messages"
+currentChat
 )
 .on(
 "child_added",
@@ -1118,13 +1113,9 @@ data.senderID !== myID
 ){
 
 addMessage(
-
 "other",
-
 data.sender,
-
 data.text,
-
 data.reply
 );
 }
