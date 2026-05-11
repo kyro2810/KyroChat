@@ -2,19 +2,15 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>KyroChat</title>
 
-<!-- FIREBASE -->
+<!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
 
 <style>
-
-/* =========================
-GLOBAL
-========================= */
 
 html{
 scroll-behavior:smooth;
@@ -36,31 +32,28 @@ display:flex;
 flex-direction:column;
 }
 
-/* =========================
-HEADER
-========================= */
+/* HEADER */
 
 header{
 height:60px;
 background:#111b21;
-border-bottom:1px solid rgba(255,255,255,0.12);
 display:flex;
 align-items:center;
 justify-content:space-between;
 padding:0 15px;
+border-bottom:1px solid rgba(255,255,255,0.1);
 box-shadow:0 0 10px rgba(255,255,255,0.05);
-z-index:20;
 }
 
 #leftHeader{
 display:flex;
 align-items:center;
-gap:14px;
+gap:12px;
 }
 
 #menuBtn,
-#settingsBtn,
-#infoBtn{
+#infoBtn,
+#settingsBtn{
 background:none;
 border:none;
 color:white;
@@ -70,154 +63,17 @@ transition:0.2s;
 }
 
 #menuBtn:hover,
-#settingsBtn:hover,
-#infoBtn:hover{
+#infoBtn:hover,
+#settingsBtn:hover{
 transform:scale(1.1);
 }
 
 #chatTitle{
 font-size:18px;
 font-weight:bold;
-cursor:pointer;
 }
 
-/* =========================
-CHAT AREA
-========================= */
-
-#chat{
-flex:1;
-overflow-y:auto;
-padding:15px;
-display:flex;
-flex-direction:column;
-gap:10px;
-min-height:0;
-background:
-linear-gradient(
-180deg,
-#0b141a,
-#101d24
-);
-}
-
-/* =========================
-MESSAGES
-========================= */
-
-.msg{
-max-width:80%;
-padding:10px 12px;
-border-radius:18px;
-word-wrap:break-word;
-border:1px solid rgba(255,255,255,0.08);
-box-shadow:
-0 0 10px rgba(255,255,255,0.03);
-animation:msgFade 0.2s ease;
-position:relative;
-touch-action:pan-y;
-}
-
-@keyframes msgFade{
-
-from{
-opacity:0;
-transform:translateY(10px);
-}
-
-to{
-opacity:1;
-transform:translateY(0);
-}
-
-}
-
-.me{
-background:#005c4b;
-align-self:flex-end;
-}
-
-.other{
-background:#1f2c34;
-align-self:flex-start;
-}
-
-.sender{
-font-size:11px;
-opacity:0.7;
-margin-bottom:4px;
-}
-
-.replyBox{
-font-size:12px;
-padding:6px;
-margin-bottom:6px;
-border-left:3px solid #00a884;
-background:rgba(255,255,255,0.05);
-border-radius:8px;
-}
-
-/* =========================
-BOTTOM BAR
-========================= */
-
-#replyPreview{
-display:none;
-padding:8px 12px;
-background:#162028;
-border-top:
-1px solid rgba(255,255,255,0.1);
-font-size:13px;
-}
-
-#replyTop{
-color:#00a884;
-margin-bottom:4px;
-}
-
-#bottom{
-padding:10px;
-display:flex;
-gap:8px;
-background:#111b21;
-border-top:1px solid rgba(255,255,255,0.12);
-}
-
-#message{
-flex:1;
-background:#1f2c34;
-border:1px solid rgba(255,255,255,0.12);
-outline:none;
-color:white;
-padding:12px;
-border-radius:15px;
-font-size:15px;
-}
-
-#message:focus{
-border-color:#00a884;
-box-shadow:
-0 0 10px rgba(0,168,132,0.3);
-}
-
-#sendBtn{
-background:#00a884;
-border:none;
-padding:12px 18px;
-color:white;
-border-radius:15px;
-font-weight:bold;
-cursor:pointer;
-transition:0.2s;
-}
-
-#sendBtn:hover{
-transform:scale(1.05);
-}
-
-/* =========================
-SIDEBAR
-========================= */
+/* SIDEBAR */
 
 #sidebar{
 position:fixed;
@@ -226,13 +82,10 @@ top:0;
 width:280px;
 height:100%;
 background:#111b21;
-border-right:
-1px solid rgba(255,255,255,0.12);
-transition:0.25s ease;
+transition:0.25s;
 z-index:100;
+border-right:1px solid rgba(255,255,255,0.1);
 overflow-y:auto;
-box-shadow:
-0 0 15px rgba(255,255,255,0.05);
 }
 
 #sidebar.open{
@@ -243,8 +96,7 @@ left:0;
 padding:18px;
 font-size:22px;
 font-weight:bold;
-border-bottom:
-1px solid rgba(255,255,255,0.1);
+border-bottom:1px solid rgba(255,255,255,0.1);
 }
 
 .sideBtn{
@@ -255,8 +107,7 @@ border:none;
 color:white;
 text-align:left;
 cursor:pointer;
-border-bottom:
-1px solid rgba(255,255,255,0.08);
+border-bottom:1px solid rgba(255,255,255,0.08);
 transition:0.2s;
 }
 
@@ -266,11 +117,10 @@ background:#23323c;
 
 .contact{
 padding:15px;
-border-bottom:
-1px solid rgba(255,255,255,0.08);
+border-bottom:1px solid rgba(255,255,255,0.08);
 cursor:pointer;
-position:relative;
 transition:0.2s;
+position:relative;
 }
 
 .contact:hover{
@@ -285,12 +135,9 @@ border-radius:50%;
 position:absolute;
 right:15px;
 top:20px;
-box-shadow:0 0 10px red;
 }
 
-/* =========================
-OVERLAY
-========================= */
+/* OVERLAY */
 
 #overlay{
 position:fixed;
@@ -300,45 +147,144 @@ display:none;
 z-index:90;
 }
 
-/* =========================
-POPUPS
-========================= */
+/* CHAT */
+
+#chat{
+flex:1;
+overflow-y:auto;
+padding:15px;
+display:flex;
+flex-direction:column;
+gap:10px;
+background:
+linear-gradient(
+180deg,
+#0b141a,
+#101d24
+);
+}
+
+/* MESSAGE */
+
+.msg{
+max-width:80%;
+padding:10px 12px;
+border-radius:18px;
+word-wrap:break-word;
+border:1px solid rgba(255,255,255,0.08);
+box-shadow:0 0 8px rgba(255,255,255,0.03);
+animation:fade 0.2s ease;
+}
+
+@keyframes fade{
+
+from{
+opacity:0;
+transform:translateY(10px);
+}
+
+to{
+opacity:1;
+transform:translateY(0);
+}
+
+}
+
+.me{
+align-self:flex-end;
+background:#005c4b;
+}
+
+.other{
+align-self:flex-start;
+background:#1f2c34;
+}
+
+.sender{
+font-size:11px;
+opacity:0.7;
+margin-bottom:5px;
+}
+
+.replyBox{
+background:rgba(255,255,255,0.05);
+padding:6px;
+border-left:3px solid #00a884;
+border-radius:8px;
+margin-bottom:6px;
+font-size:12px;
+}
+
+/* REPLY */
+
+#replyPreview{
+display:none;
+padding:8px 12px;
+background:#162028;
+border-top:1px solid rgba(255,255,255,0.1);
+}
+
+#replyTop{
+color:#00a884;
+font-size:13px;
+margin-bottom:4px;
+}
+
+#replyText{
+font-size:12px;
+opacity:0.8;
+}
+
+/* BOTTOM */
+
+#bottom{
+padding:10px;
+display:flex;
+gap:8px;
+background:#111b21;
+border-top:1px solid rgba(255,255,255,0.1);
+}
+
+#message{
+flex:1;
+background:#1f2c34;
+border:1px solid rgba(255,255,255,0.1);
+outline:none;
+color:white;
+padding:12px;
+border-radius:15px;
+font-size:15px;
+}
+
+#message:focus{
+border-color:#00a884;
+}
+
+#sendBtn{
+background:#00a884;
+border:none;
+padding:12px 18px;
+color:white;
+border-radius:15px;
+font-weight:bold;
+cursor:pointer;
+}
+
+/* POPUPS */
 
 .popup{
 position:fixed;
 top:50%;
 left:50%;
-transform:
-translate(-50%,-50%);
+transform:translate(-50%,-50%);
 width:90%;
 max-width:420px;
 background:#111b21;
-border:1px solid rgba(255,255,255,0.15);
+border:1px solid rgba(255,255,255,0.12);
 border-radius:18px;
 padding:20px;
 display:none;
 z-index:200;
-box-shadow:
-0 0 20px rgba(255,255,255,0.06);
-animation:pop 0.18s ease;
-}
-
-@keyframes pop{
-
-from{
-opacity:0;
-transform:
-translate(-50%,-50%)
-scale(0.92);
-}
-
-to{
-opacity:1;
-transform:
-translate(-50%,-50%)
-scale(1);
-}
-
 }
 
 .popupTop{
@@ -372,21 +318,14 @@ padding:10px;
 margin-top:8px;
 background:#1f2c34;
 border-radius:10px;
-border:1px solid rgba(255,255,255,0.08);
 }
 
-/* =========================
-MOBILE
-========================= */
+/* MOBILE */
 
 @media(max-width:700px){
 
 .msg{
 max-width:88%;
-}
-
-header{
-padding:0 10px;
 }
 
 }
@@ -396,9 +335,7 @@ padding:0 10px;
 
 <body>
 
-<!-- =========================
-HEADER
-========================= -->
+<!-- HEADER -->
 
 <header>
 
@@ -428,9 +365,7 @@ KyroChat
 
 </header>
 
-<!-- =========================
-SIDEBAR
-========================= -->
+<!-- SIDEBAR -->
 
 <div id="sidebar">
 
@@ -450,21 +385,34 @@ KyroChat
 
 </div>
 
-<!-- =========================
-OVERLAY
-========================= -->
+<!-- OVERLAY -->
 
 <div id="overlay"></div>
 
-<!-- =========================
-CHAT
-========================= -->
+<!-- CHAT -->
 
-<div id="chat"></div>
+<div id="chat">
 
-<!-- =========================
-REPLY PREVIEW
-========================= -->
+<div style="
+text-align:center;
+opacity:0.7;
+margin-top:50px;
+line-height:1.8;
+">
+
+<h2>
+KyroChat
+</h2>
+
+<br>
+
+<div id="myProfile"></div>
+
+</div>
+
+</div>
+
+<!-- REPLY -->
 
 <div id="replyPreview">
 
@@ -474,9 +422,7 @@ REPLY PREVIEW
 
 </div>
 
-<!-- =========================
-BOTTOM
-========================= -->
+<!-- BOTTOM -->
 
 <div id="bottom">
 
@@ -492,9 +438,7 @@ Send
 
 </div>
 
-<!-- =========================
-INFO POPUP
-========================= -->
+<!-- INFO -->
 
 <div class="popup" id="infoPopup">
 
@@ -502,7 +446,8 @@ INFO POPUP
 
 <h3>Info</h3>
 
-<button class="closeBtn"
+<button
+class="closeBtn"
 onclick="closePopup('infoPopup')">
 ✕
 </button>
@@ -517,7 +462,7 @@ Press the ☰ icon and click "Add Contact".
 <br>
 
 <p>
-2. Mobile layout is still improving.
+2. On mobile you may need small scrolling depending on device.
 </p>
 
 <br>
@@ -533,9 +478,7 @@ Locked Section
 
 </div>
 
-<!-- =========================
-GROUP SETTINGS
-========================= -->
+<!-- GROUP -->
 
 <div class="popup" id="groupPopup">
 
@@ -543,7 +486,8 @@ GROUP SETTINGS
 
 <h3>Group Settings</h3>
 
-<button class="closeBtn"
+<button
+class="closeBtn"
 onclick="closePopup('groupPopup')">
 ✕
 </button>
@@ -564,9 +508,7 @@ onclick="closePopup('groupPopup')">
 
 <script>
 
-/* =========================
-FIREBASE
-========================= */
+/* FIREBASE */
 
 const firebaseConfig = {
 
@@ -594,9 +536,7 @@ firebase.initializeApp(firebaseConfig);
 
 const db = firebase.database();
 
-/* =========================
-USER
-========================= */
+/* USER */
 
 let myID =
 localStorage.getItem("kyro_id");
@@ -629,9 +569,15 @@ username
 );
 }
 
-/* =========================
-DATA
-========================= */
+document.getElementById(
+"myProfile"
+).innerHTML = `
+${username}
+<br>
+${myID}
+`;
+
+/* DATA */
 
 let contacts =
 JSON.parse(
@@ -648,14 +594,10 @@ localStorage.getItem(
 ) || [];
 
 let currentChat = null;
-
 let currentType = "dm";
-
 let replyData = null;
 
-/* =========================
-ELEMENTS
-========================= */
+/* ELEMENTS */
 
 const sidebar =
 document.getElementById("sidebar");
@@ -675,9 +617,7 @@ document.getElementById("message");
 const chatTitle =
 document.getElementById("chatTitle");
 
-/* =========================
-SIDEBAR
-========================= */
+/* SIDEBAR */
 
 document
 .getElementById("menuBtn")
@@ -695,13 +635,57 @@ sidebar.classList.remove("open");
 overlay.style.display = "none";
 
 closePopup("infoPopup");
-
 closePopup("groupPopup");
 };
 
-/* =========================
-RENDER CONTACTS
-========================= */
+/* POPUPS */
+
+function openPopup(id){
+
+document
+.getElementById(id)
+.style.display = "block";
+
+overlay.style.display = "block";
+}
+
+function closePopup(id){
+
+document
+.getElementById(id)
+.style.display = "none";
+
+overlay.style.display = "none";
+}
+
+document
+.getElementById("infoBtn")
+.onclick = () => {
+
+openPopup("infoPopup");
+};
+
+/* LOCKED */
+
+function openLocked(){
+
+let pass =
+prompt("Password:");
+
+if(pass === "2811"){
+
+alert(
+"Armaan Ayan's ID: ID-ibq1be5i\n\ntext me anytime"
+);
+}
+
+else{
+
+alert("Wrong password");
+}
+}
+
+/* CONTACTS */
 
 function renderContacts(){
 
@@ -714,14 +698,11 @@ document.createElement("div");
 
 div.className = "contact";
 
-div.innerHTML = `
-${c.name}
-`;
+div.innerText = c.name;
 
 div.onclick = () => {
 
 openDM(c);
-
 };
 
 contactList.appendChild(div);
@@ -734,13 +715,12 @@ document.createElement("div");
 
 div.className = "contact";
 
-div.innerHTML =
+div.innerText =
 "👥 " + g.name;
 
 div.onclick = () => {
 
 openGroup(g);
-
 };
 
 contactList.appendChild(div);
@@ -749,9 +729,7 @@ contactList.appendChild(div);
 
 renderContacts();
 
-/* =========================
-ADD CONTACT
-========================= */
+/* ADD CONTACT */
 
 function addContact(){
 
@@ -761,12 +739,11 @@ prompt("Enter Friend ID:");
 if(!id) return;
 
 let name =
-prompt("Save as:");
+prompt("Save contact as:");
 
 if(!name) return;
 
 contacts.push({
-
 id,
 name
 });
@@ -779,9 +756,7 @@ JSON.stringify(contacts)
 renderContacts();
 }
 
-/* =========================
-CREATE GROUP
-========================= */
+/* CREATE GROUP */
 
 function createGroup(){
 
@@ -799,9 +774,7 @@ Math.random()
 let group = {
 
 id:groupID,
-
 name:name,
-
 members:[myID]
 };
 
@@ -819,9 +792,7 @@ db.ref(
 renderContacts();
 }
 
-/* =========================
-OPEN DM
-========================= */
+/* OPEN DM */
 
 function openDM(c){
 
@@ -841,9 +812,7 @@ overlay.style.display = "none";
 listenDM();
 }
 
-/* =========================
-OPEN GROUP
-========================= */
+/* OPEN GROUP */
 
 function openGroup(g){
 
@@ -865,9 +834,7 @@ renderMembers(g);
 listenGroup();
 }
 
-/* =========================
-GROUP SETTINGS
-========================= */
+/* GROUP SETTINGS */
 
 chatTitle.onclick = () => {
 
@@ -899,73 +866,18 @@ ${m}
 function addPeople(){
 
 alert(
-"Future update 😭"
+"Coming soon 😭"
 );
 }
 
 function removePeople(){
 
 alert(
-"Future update 😭"
+"Coming soon 😭"
 );
 }
 
-/* =========================
-POPUPS
-========================= */
-
-function openPopup(id){
-
-document
-.getElementById(id)
-.style.display = "block";
-
-overlay.style.display = "block";
-}
-
-function closePopup(id){
-
-document
-.getElementById(id)
-.style.display = "none";
-
-overlay.style.display = "none";
-}
-
-document
-.getElementById("infoBtn")
-.onclick = () => {
-
-openPopup("infoPopup");
-};
-
-/* =========================
-LOCKED
-========================= */
-
-function openLocked(){
-
-let pass =
-prompt("Password:");
-
-if(pass === "2811"){
-
-alert(
-
-"Armaan Ayan's ID: ID-ibq1be5i\n\ntext me anytime"
-
-);
-}
-
-else{
-
-alert("Wrong password");
-}
-}
-
-/* =========================
-MESSAGES
-========================= */
+/* ADD MESSAGE */
 
 function addMessage(
 type,
@@ -1002,12 +914,9 @@ ${replyHTML}
 <div>
 ${text}
 </div>
-
 `;
 
-/* =========================
-SWIPE REPLY
-========================= */
+/* SWIPE REPLY */
 
 let startX = 0;
 
@@ -1064,9 +973,7 @@ chat.scrollTop =
 chat.scrollHeight;
 }
 
-/* =========================
-SEND
-========================= */
+/* SEND */
 
 function sendMsg(){
 
@@ -1125,9 +1032,11 @@ document
 .style.display = "none";
 }
 
-/* =========================
-ENTER SEND
-========================= */
+/* SEND EVENTS */
+
+document
+.getElementById("sendBtn")
+.onclick = sendMsg;
 
 messageInput
 .addEventListener(
@@ -1141,13 +1050,7 @@ sendMsg();
 }
 );
 
-document
-.getElementById("sendBtn")
-.onclick = sendMsg;
-
-/* =========================
-LISTEN DM
-========================= */
+/* LISTEN DM */
 
 function listenDM(){
 
@@ -1182,17 +1085,12 @@ data.sender,
 data.text,
 
 data.reply
-
 );
 }
-
-snapshot.ref.remove();
 });
 }
 
-/* =========================
-LISTEN GROUP
-========================= */
+/* LISTEN GROUP */
 
 function listenGroup(){
 
@@ -1228,40 +1126,10 @@ data.sender,
 data.text,
 
 data.reply
-
 );
 }
 });
 }
-
-/* =========================
-SHOW MY ID
-========================= */
-
-chat.innerHTML = `
-
-<div style="
-text-align:center;
-opacity:0.7;
-margin-top:40px;
-line-height:1.8;
-">
-
-<h2>
-KyroChat
-</h2>
-
-<br>
-
-${username}
-
-<br>
-
-${myID}
-
-</div>
-
-`;
 
 </script>
 
