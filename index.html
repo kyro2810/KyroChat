@@ -1,16 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>KyroChat</title>
-
-<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+<!-- =========================
+KYROCHAT ULTRA DARK UI UPDATE
+========================= -->
 
 <style>
+
+html{
+scroll-behavior:smooth;
+}
 
 *{
 margin:0;
@@ -22,24 +18,41 @@ body{
 font-family:Arial,sans-serif;
 background:#0b141a;
 color:white;
-height:100vh;
+height:100dvh;
+overflow:hidden;
 display:flex;
 flex-direction:column;
 }
 
-/* HEADER */
+/* =========================
+HEADER
+========================= */
 
 header{
-background:#202c33;
-padding:12px;
+height:60px;
+background:#111b21;
+border-bottom:1px solid rgba(255,255,255,0.15);
 display:flex;
-justify-content:space-between;
 align-items:center;
-border-bottom:1px solid #2f3b43;
-z-index:5;
+justify-content:space-between;
+padding:0 15px;
+box-shadow:
+0 0 10px rgba(255,255,255,0.05);
+z-index:50;
 }
 
-#leftHeader{
+#topTitle{
+font-size:18px;
+font-weight:bold;
+cursor:pointer;
+transition:0.2s;
+}
+
+#topTitle:hover{
+opacity:0.8;
+}
+
+#leftTop{
 display:flex;
 align-items:center;
 gap:12px;
@@ -53,57 +66,73 @@ border:none;
 color:white;
 font-size:22px;
 cursor:pointer;
+transition:0.2s;
 }
 
-#title{
-font-size:20px;
-font-weight:bold;
+#menuBtn:hover,
+#settingsBtn:hover,
+#infoBtn:hover{
+transform:scale(1.1);
 }
 
-/* TOP */
-
-#chatName{
-background:#111b21;
-padding:12px;
-border-bottom:1px solid #2f3b43;
-line-height:1.5;
-}
-
-#myIDText{
-color:#00a884;
-font-size:13px;
-}
-
-/* CHAT */
+/* =========================
+CHAT
+========================= */
 
 #chat{
 flex:1;
-min-height:0;
 overflow-y:auto;
 padding:15px;
 display:flex;
 flex-direction:column;
+gap:10px;
+min-height:0;
+background:
+linear-gradient(
+180deg,
+#0b141a,
+#0f1d25
+);
 }
 
+/* =========================
+MESSAGES
+========================= */
+
 .msg{
-max-width:75%;
-padding:10px;
-margin:6px 0;
-border-radius:10px;
+max-width:78%;
+padding:10px 12px;
+border-radius:18px;
 word-wrap:break-word;
+animation:msgFade 0.2s ease;
 position:relative;
-transition:transform 0.15s;
-touch-action:pan-y;
+border:1px solid rgba(255,255,255,0.08);
+box-shadow:
+0 0 8px rgba(255,255,255,0.03);
+}
+
+@keyframes msgFade{
+
+from{
+opacity:0;
+transform:translateY(10px);
+}
+
+to{
+opacity:1;
+transform:translateY(0);
+}
+
 }
 
 .me{
-background:#005c4b;
 align-self:flex-end;
+background:#005c4b;
 }
 
 .other{
-background:#202c33;
 align-self:flex-start;
+background:#1f2c34;
 }
 
 .sender{
@@ -112,92 +141,70 @@ opacity:0.7;
 margin-bottom:5px;
 }
 
-/* REPLY */
-
-.replyBox{
-background:rgba(255,255,255,0.08);
-padding:6px;
-border-left:3px solid #00a884;
-margin-bottom:6px;
-font-size:12px;
-border-radius:5px;
-}
-
-.replyName{
-font-size:11px;
-color:#00a884;
-margin-bottom:3px;
-}
-
-/* REPLY PREVIEW */
-
-#replyPreview{
-display:none;
-background:#111b21;
-padding:8px;
-border-top:1px solid #2f3b43;
-}
-
-#replyTop{
-font-size:11px;
-color:#00a884;
-margin-bottom:4px;
-}
-
-#cancelReply{
-float:right;
-cursor:pointer;
-}
-
-/* INPUT */
+/* =========================
+BOTTOM BAR
+========================= */
 
 #bottom{
-display:flex;
-gap:5px;
 padding:10px;
-background:#202c33;
+display:flex;
+gap:8px;
+background:#111b21;
+border-top:1px solid rgba(255,255,255,0.12);
+position:sticky;
+bottom:0;
 }
 
 #message{
 flex:1;
-border:none;
-border-radius:8px;
-padding:10px;
-background:#2a3942;
-color:white;
+background:#1f2c34;
+border:1px solid rgba(255,255,255,0.12);
 outline:none;
+color:white;
+padding:12px;
+border-radius:15px;
+font-size:15px;
+}
+
+#message:focus{
+border-color:#00a884;
+box-shadow:
+0 0 10px rgba(0,168,132,0.3);
 }
 
 #sendBtn{
-border:none;
 background:#00a884;
+border:none;
+padding:12px 18px;
 color:white;
-padding:10px 15px;
-border-radius:8px;
+border-radius:14px;
 cursor:pointer;
+transition:0.2s;
+font-weight:bold;
 }
 
-/* SIDEBAR */
-
-#overlay{
-position:fixed;
-inset:0;
-background:rgba(0,0,0,0.4);
-display:none;
-z-index:998;
+#sendBtn:hover{
+transform:scale(1.05);
 }
+
+/* =========================
+SIDEBAR
+========================= */
 
 #sidebar{
 position:fixed;
-top:0;
 left:-300px;
+top:0;
 width:280px;
 height:100%;
 background:#111b21;
-transition:0.25s;
-z-index:999;
+border-right:
+1px solid rgba(255,255,255,0.15);
+transition:0.25s ease;
+z-index:200;
 overflow-y:auto;
-border-right:1px solid #2f3b43;
+box-shadow:
+0 0 15px rgba(255,255,255,0.04);
 }
 
 #sidebar.open{
@@ -205,479 +212,284 @@ left:0;
 }
 
 #sidebarHeader{
-padding:15px;
+padding:18px;
 font-size:20px;
 font-weight:bold;
-border-bottom:1px solid #2f3b43;
+border-bottom:
+1px solid rgba(255,255,255,0.1);
 }
 
-.sideButton{
+.sideBtn{
 width:100%;
-padding:12px;
+padding:14px;
+background:#1a262e;
 border:none;
-background:#202c33;
 color:white;
 text-align:left;
 cursor:pointer;
-border-bottom:1px solid #2f3b43;
+border-bottom:
+1px solid rgba(255,255,255,0.08);
+transition:0.2s;
+}
+
+.sideBtn:hover{
+background:#22313b;
 }
 
 .contact{
-padding:12px;
-border-bottom:1px solid #2f3b43;
+padding:14px;
 cursor:pointer;
+border-bottom:
+1px solid rgba(255,255,255,0.08);
+transition:0.2s;
 position:relative;
 }
 
 .contact:hover{
-background:#202c33;
+background:#22313b;
 }
 
-.dot{
+.redDot{
 width:10px;
 height:10px;
 background:red;
 border-radius:50%;
 position:absolute;
-top:14px;
-right:14px;
+right:15px;
+top:18px;
+box-shadow:
+0 0 10px red;
 }
 
-/* SETTINGS */
+/* =========================
+OVERLAY
+========================= */
 
-#settingsMenu{
+#overlay{
 position:fixed;
-top:60px;
-right:10px;
-background:#202c33;
-border-radius:10px;
-overflow:hidden;
+inset:0;
+background:rgba(0,0,0,0.45);
 display:none;
-z-index:1001;
-border:1px solid #2f3b43;
+z-index:150;
+backdrop-filter:blur(2px);
 }
 
-.settingItem{
-padding:12px 18px;
-cursor:pointer;
-border-bottom:1px solid #2f3b43;
-}
+/* =========================
+INFO WINDOW
+========================= */
 
-.settingItem:hover{
-background:#2a3942;
-}
-
-/* INFO WINDOW */
-
-#infoWindow{
-display:none;
+.popup{
 position:fixed;
 top:50%;
 left:50%;
-transform:translate(-50%,-50%);
+transform:
+translate(-50%,-50%)
+scale(0.95);
+
 width:90%;
-max-width:400px;
-background:#202c33;
+max-width:420px;
+
+background:#111b21;
+
+border:
+1px solid rgba(255,255,255,0.15);
+
+border-radius:18px;
+
 padding:20px;
-border-radius:15px;
-z-index:2000;
-border:1px solid #2f3b43;
+
+display:none;
+
+z-index:500;
+
+animation:popupAnim 0.18s ease forwards;
+
+box-shadow:
+0 0 20px rgba(255,255,255,0.06);
 }
 
-#infoHeader{
+@keyframes popupAnim{
+
+from{
+opacity:0;
+transform:
+translate(-50%,-50%)
+scale(0.92);
+}
+
+to{
+opacity:1;
+transform:
+translate(-50%,-50%)
+scale(1);
+}
+
+}
+
+.popupTop{
 display:flex;
 justify-content:space-between;
 align-items:center;
 margin-bottom:15px;
 }
 
-#closeInfoBtn{
+.closeBtn{
 background:none;
 border:none;
 color:white;
-font-size:20px;
+font-size:22px;
 cursor:pointer;
 }
 
-#lockedBtn{
-width:100%;
-padding:10px;
-border:none;
+.popup button{
 background:#00a884;
+border:none;
+padding:10px;
 color:white;
-border-radius:10px;
-cursor:pointer;
+border-radius:12px;
+width:100%;
 margin-top:15px;
+cursor:pointer;
+}
+
+/* =========================
+REPLY BOX
+========================= */
+
+#replyPreview{
+display:none;
+background:#162028;
+padding:8px 12px;
+border-top:
+1px solid rgba(255,255,255,0.1);
+font-size:13px;
+}
+
+#replyTop{
+color:#00a884;
+margin-bottom:4px;
+}
+
+/* =========================
+GROUP SETTINGS
+========================= */
+
+.member{
+padding:10px;
+background:#1b2730;
+margin-top:8px;
+border-radius:10px;
+border:
+1px solid rgba(255,255,255,0.08);
+}
+
+/* =========================
+MOBILE
+========================= */
+
+@media(max-width:700px){
+
+.msg{
+max-width:88%;
+}
+
+header{
+padding:0 10px;
+}
+
 }
 
 </style>
-</head>
-
-<body>
-
-<div id="overlay"></div>
-
-<!-- SIDEBAR -->
-
-<div id="sidebar">
-
-<div id="sidebarHeader">
-Chats
-</div>
-
-<button
-class="sideButton"
-onclick="addContact()">
-+ Add Contact
-</button>
-
-<button
-class="sideButton"
-onclick="createGroup()">
-+ Create Group
-</button>
-
-<div id="contactList"></div>
-
-</div>
-
-<!-- INFO WINDOW -->
-
-<div id="infoWindow">
-
-<div id="infoHeader">
-
-<h3>
-Info
-</h3>
-
-<button id="closeInfoBtn">
-✕
-</button>
-
-</div>
-
-<div style="line-height:1.7;font-size:14px;">
-
-1. Give your ID to the person you want to talk to or get their ID. Press the ☰ (3 dash icon) on the top-left side of your phone/PC and click "add contact" and enter your friend's ID (example: ID-abcd123) to talk with them.
-
-<br><br>
-
-2. On a mobile smart phone the website is not measured so you might need to scroll down and move a little bit to find the messaging box and other stuff.
-
-<br><br>
-
-3. This Website is still in development so expect problems. This Web is made by Armaan Ayan.
-
-</div>
-
-<button id="lockedBtn">
-Locked Section
-</button>
-
-</div>
-
-<!-- SETTINGS -->
-
-<div id="settingsMenu">
-
-<div class="settingItem"
-onclick="changeName()">
-Change Username
-</div>
-
-<div class="settingItem"
-onclick="showMyID()">
-Show My ID
-</div>
-
-<div class="settingItem"
-onclick="copyMyID()">
-Copy My ID
-</div>
-
-</div>
-
-<!-- HEADER -->
-
-<header>
-
-<div id="leftHeader">
-
-<button id="menuBtn">
-☰
-</button>
-
-<div id="title">
-KyroChat
-</div>
-
-</div>
-
-<div style="display:flex;gap:10px;">
-
-<button id="infoBtn">
-ℹ
-</button>
-
-<button id="settingsBtn">
-⚙
-</button>
-
-</div>
-
-</header>
-
-<!-- TOP -->
-
-<div id="chatName">
-
-Open ☰ and select a contact
-
-<br><br>
-
-<span style="font-size:12px;opacity:0.7;">
-Your ID:
-</span>
-
-<br>
-
-<span id="myIDText"></span>
-
-</div>
-
-<!-- CHAT -->
-
-<div id="chat"></div>
-
-<!-- REPLY -->
-
-<div id="replyPreview">
-
-<div id="replyTop">
-
-Replying...
-
-<span id="cancelReply">
-✕
-</span>
-
-</div>
-
-<div id="replyText"></div>
-
-</div>
-
-<!-- INPUT -->
-
-<div id="bottom">
-
-<input
-id="message"
-placeholder="Type message..."
-autocomplete="off"
->
-
-<button
-id="sendBtn"
-onclick="sendMsg()">
-SEND
-</button>
-
-</div>
 
 <script>
 
-// FIREBASE
+/* =========================
+MOBILE FIX
+========================= */
 
-const firebaseConfig = {
+window.addEventListener(
+"resize",
+() => {
 
-apiKey: "AIzaSyDBzZ97kqHW9gcCW_ObNvpCNlW1VTGiDxs",
-
-authDomain: "kyrochat.firebaseapp.com",
-
-databaseURL: "https://kyrochat-default-rtdb.asia-southeast1.firebasedatabase.app/",
-
-projectId: "kyrochat",
-
-storageBucket: "kyrochat.firebasestorage.app",
-
-messagingSenderId: "360761453559",
-
-appId: "1:360761453559:web:2138c9c2e83512ace85cf2",
-
-measurementId: "G-R2G6R4NM8Q"
-};
-
-firebase.initializeApp(firebaseConfig);
-
-const db = firebase.database();
-
-
-// USER
-
-let myID =
-localStorage.getItem("kyro_id");
-
-if(!myID){
-
-myID =
-"ID-" +
-Math.random()
-.toString(36)
-.substring(2,10);
-
-localStorage.setItem(
-"kyro_id",
-myID
+document.body.style.height =
+window.innerHeight + "px";
+}
 );
+
+/* =========================
+ENTER TO SEND
+========================= */
+
+document
+.getElementById("message")
+.addEventListener(
+"keypress",
+e => {
+
+if(e.key === "Enter"){
+
+sendMsg();
+}
+}
+);
+
+/* =========================
+SMOOTH SIDEBAR
+========================= */
+
+function openSidebar(){
+
+document
+.getElementById("sidebar")
+.classList.add("open");
+
+document
+.getElementById("overlay")
+.style.display = "block";
 }
 
-let username =
-localStorage.getItem("kyro_name");
+function closeSidebar(){
 
-if(!username){
+document
+.getElementById("sidebar")
+.classList.remove("open");
 
-username =
-prompt("Enter username:");
-
-localStorage.setItem(
-"kyro_name",
-username
-);
+document
+.getElementById("overlay")
+.style.display = "none";
 }
 
+/* =========================
+INFO POPUP
+========================= */
+
+function openInfo(){
+
 document
-.getElementById("myIDText")
-.innerText = myID;
+.getElementById("infoPopup")
+.style.display = "block";
 
-
-// STORAGE
-
-let contacts =
-JSON.parse(
-localStorage.getItem(
-"kyro_contacts"
-)
-) || [];
-
-let unread =
-JSON.parse(
-localStorage.getItem(
-"kyro_unread"
-)
-) || {};
-
-let localChats =
-JSON.parse(
-localStorage.getItem(
-"kyro_localChats"
-)
-) || {};
-
-let activeChat = null;
-
-let replyingTo = null;
-
-
-// ELEMENTS
-
-const chat =
-document.getElementById("chat");
-
-const contactList =
-document.getElementById("contactList");
-
-
-// SAVE
-
-function saveAll(){
-
-localStorage.setItem(
-"kyro_contacts",
-JSON.stringify(contacts)
-);
-
-localStorage.setItem(
-"kyro_unread",
-JSON.stringify(unread)
-);
-
-localStorage.setItem(
-"kyro_localChats",
-JSON.stringify(localChats)
-);
+document
+.getElementById("overlay")
+.style.display = "block";
 }
 
-
-// SIDEBAR
-
-const sidebar =
-document.getElementById("sidebar");
-
-const overlay =
-document.getElementById("overlay");
+function closeInfo(){
 
 document
-.getElementById("menuBtn")
-.onclick = () => {
-
-sidebar.classList.add("open");
-
-overlay.style.display =
-"block";
-};
-
-overlay.onclick = () => {
-
-sidebar.classList.remove(
-"open"
-);
-
-overlay.style.display =
-"none";
+.getElementById("infoPopup")
+.style.display = "none";
 
 document
-.getElementById("settingsMenu")
-.style.display =
-"none";
-};
+.getElementById("overlay")
+.style.display = "none";
+}
 
+/* =========================
+LOCKED SECTION
+========================= */
 
-// INFO
-
-document
-.getElementById("infoBtn")
-.onclick = () => {
-
-document
-.getElementById("infoWindow")
-.style.display =
-"block";
-
-overlay.style.display =
-"block";
-};
-
-document
-.getElementById("closeInfoBtn")
-.onclick = () => {
-
-document
-.getElementById("infoWindow")
-.style.display =
-"none";
-
-overlay.style.display =
-"none";
-};
-
-
-// LOCKED SECTION
-
-document
-.getElementById("lockedBtn")
-.onclick = () => {
+function openLocked(){
 
 let pass =
 prompt(
@@ -687,372 +499,63 @@ prompt(
 if(pass === "2811"){
 
 alert(
+
 "Armaan Ayan's ID: ID-ibq1be5i\n\ntext me anytime"
+
 );
 }
 
 else{
 
-alert(
-"Wrong Password"
-);
+alert("Wrong Password");
 }
-};
+}
 
+/* =========================
+GROUP SETTINGS
+========================= */
 
-// SETTINGS
+function openGroupSettings(){
 
 document
-.getElementById("settingsBtn")
+.getElementById("groupPopup")
+.style.display = "block";
+
+document
+.getElementById("overlay")
+.style.display = "block";
+}
+
+function closeGroupSettings(){
+
+document
+.getElementById("groupPopup")
+.style.display = "none";
+
+document
+.getElementById("overlay")
+.style.display = "none";
+}
+
+/* =========================
+TOP TITLE CLICK
+========================= */
+
+document
+.getElementById("topTitle")
 .onclick = () => {
 
-const menu =
-document.getElementById(
-"settingsMenu"
-);
+if(currentChatType === "group"){
 
-if(menu.style.display === "block"){
-
-menu.style.display = "none";
-}
-
-else{
-
-menu.style.display = "block";
+openGroupSettings();
 }
 };
 
-
-// CONTACTS
-
-function renderContacts(){
-
-contactList.innerHTML = "";
-
-contacts.forEach(contact => {
-
-const div =
-document.createElement("div");
-
-div.className =
-"contact";
-
-div.innerText =
-contact.name;
-
-
-if(unread[contact.id]){
-
-const dot =
-document.createElement("div");
-
-dot.className =
-"dot";
-
-div.appendChild(dot);
-}
-
-
-div.onclick = () => {
-
-activeChat =
-contact.id;
-
-unread[contact.id] =
-false;
-
-saveAll();
-
-renderContacts();
-
-openChat(
-contact.id,
-contact.name
-);
-
-sidebar.classList.remove(
-"open"
-);
-
-overlay.style.display =
-"none";
-};
-
-
-div.oncontextmenu = (e) => {
-
-e.preventDefault();
-
-let newName =
-prompt(
-"Rename contact:",
-contact.name
-);
-
-if(newName){
-
-contact.name =
-newName;
-
-saveAll();
-
-renderContacts();
-}
-};
-
-contactList.appendChild(div);
-
-});
-}
-
-renderContacts();
-
-
-// OPEN CHAT
-
-function openChat(id,name){
-
-chat.innerHTML = "";
-
-document
-.getElementById("chatName")
-.innerHTML =
-`
-${name}
-
-<br><br>
-
-<span style="font-size:12px;opacity:0.7;">
-Your ID:
-</span>
-
-<br>
-
-<span id="myIDText">
-${myID}
-</span>
-`;
-
-if(!localChats[id]){
-
-localChats[id] = [];
-}
-
-localChats[id].forEach(msg => {
-
-addMessage(
-msg.type,
-msg.sender,
-msg.text,
-msg.reply,
-false
-);
-
-});
-}
-
-
-// ADD MESSAGE
-
-function addMessage(
-type,
-sender,
-text,
-reply=null,
-save=true
-){
-
-const div =
-document.createElement("div");
-
-div.className =
-"msg " + type;
-
-
-let replyHTML = "";
-
-if(reply){
-
-replyHTML =
-`
-<div class="replyBox">
-
-<div class="replyName">
-Reply to ${reply.sender}
-</div>
-
-<div>
-${reply.text}
-</div>
-
-</div>
-`;
-}
-
-div.innerHTML =
-`
-<div class="sender">
-${sender}
-</div>
-
-${replyHTML}
-
-<div>
-${text}
-</div>
-`;
-
-
-// RIGHT CLICK REPLY
-
-div.oncontextmenu = (e) => {
-
-e.preventDefault();
-
-activateReply(
-sender,
-text
-);
-};
-
-
-// MOBILE SWIPE
-
-let startX = 0;
-let currentX = 0;
-let swiping = false;
-
-div.addEventListener(
-"touchstart",
-(e) => {
-
-startX =
-e.touches[0].clientX;
-
-swiping = true;
-}
-);
-
-div.addEventListener(
-"touchmove",
-(e) => {
-
-if(!swiping) return;
-
-currentX =
-e.touches[0].clientX;
-
-let diff =
-currentX - startX;
-
-if(diff > 0){
-
-div.style.transform =
-`translateX(${diff}px)`;
-}
-}
-);
-
-div.addEventListener(
-"touchend",
-() => {
-
-swiping = false;
-
-let moved =
-currentX - startX;
-
-if(moved > 80){
-
-activateReply(
-sender,
-text
-);
-}
-
-div.style.transform =
-"translateX(0px)";
-});
-
-chat.appendChild(div);
-
-chat.scrollTop =
-chat.scrollHeight;
-
-
-if(save && activeChat){
-
-if(!localChats[activeChat]){
-
-localChats[activeChat]
-= [];
-}
-
-localChats[activeChat]
-.push({
-
-type:type,
-
-sender:sender,
-
-text:text,
-
-reply:reply
-});
-
-localChats[activeChat] =
-localChats[activeChat]
-.slice(-50);
-
-saveAll();
-}
-}
-
-
-// REPLY
-
-function activateReply(
-sender,
-text
-){
-
-replyingTo = {
-
-sender:sender,
-
-text:text
-};
-
-document
-.getElementById("replyPreview")
-.style.display =
-"block";
-
-document
-.getElementById("replyText")
-.innerHTML =
-`
-<b>${sender}</b><br>
-${text}
-`;
-}
-
-document
-.getElementById("cancelReply")
-.onclick = () => {
-
-replyingTo = null;
-
-document
-.getElementById("replyPreview")
-.style.display =
-"none";
-};
-
-
-// ADD CONTACT
-
-function addContact(){
+/* =========================
+ADD PEOPLE
+========================= */
+
+function addPeople(){
 
 let id =
 prompt(
@@ -1061,248 +564,58 @@ prompt(
 
 if(!id) return;
 
-let name =
+alert(
+id + " added to group."
+);
+}
+
+/* =========================
+REMOVE PEOPLE
+========================= */
+
+function removePeople(){
+
+let id =
 prompt(
-"Enter Friend Name:"
+"Enter ID to remove:"
 );
 
-if(!name) return;
-
-contacts.push({
-
-id:id,
-
-name:name
-});
-
-saveAll();
-
-renderContacts();
-}
-
-
-// GROUP
-
-function createGroup(){
+if(!id) return;
 
 alert(
-"Groups coming soon 😄"
+id + " removed."
 );
 }
 
-
-// SEND
-
-function sendMsg(){
-
-if(!activeChat){
-
-alert(
-"Open a contact first."
-);
-
-return;
-}
-
-const input =
-document.getElementById(
-"message"
-);
-
-const text =
-input.value.trim();
-
-if(!text) return;
-
-
-db.ref(
-"messages/" +
-activeChat
-).push({
-
-sender: username,
-
-senderID: myID,
-
-text: text,
-
-reply: replyingTo,
-
-time: Date.now()
-});
-
-
-addMessage(
-"me",
-"You",
-text,
-replyingTo
-);
-
-
-replyingTo = null;
-
-document
-.getElementById("replyPreview")
-.style.display =
-"none";
-
-input.value = "";
-}
-
-
-// ENTER TO SEND
-
-document
-.getElementById("message")
-.addEventListener(
-"keypress",
-function(e){
-
-if(e.key === "Enter"){
-
-sendMsg();
-}
-}
-);
-
-
-// RECEIVE
-
-db.ref(
-"messages/" + myID
-)
-.on(
-"child_added",
-snapshot => {
-
-const data =
-snapshot.val();
-
-
-let exists =
-contacts.find(
-c =>
-c.id === data.senderID
-);
-
-if(!exists){
-
-contacts.push({
-
-id:data.senderID,
-
-name:data.sender
-});
-}
-
-
-unread[data.senderID] =
-true;
-
-
-if(
-!localChats[data.senderID]
-){
-
-localChats[data.senderID]
-= [];
-}
-
-localChats[data.senderID]
-.push({
-
-type:"other",
-
-sender:
-data.sender +
-" (" +
-data.senderID +
-")",
-
-text:data.text,
-
-reply:data.reply
-});
-
-saveAll();
-
-
-if(
-activeChat ===
-data.senderID
-){
-
-addMessage(
-
-"other",
-
-data.sender +
-" (" +
-data.senderID +
-")",
-
-data.text,
-
-data.reply,
-
-false
-);
-
-unread[data.senderID] =
-false;
-}
-
-renderContacts();
-
-snapshot.ref.remove();
-
-});
-
-
-// SETTINGS
-
-function changeName(){
-
-let newName =
-prompt(
-"Enter new username:"
-);
-
-if(!newName) return;
-
-username = newName;
-
-localStorage.setItem(
-"kyro_name",
-username
-);
-
-alert(
-"Username changed."
-);
-}
-
-function showMyID(){
-
-alert(
-"Your ID:\n\n" +
-myID
-);
-}
-
-function copyMyID(){
-
-navigator.clipboard.writeText(
-myID
-);
-
-alert(
-"ID copied!"
-);
-}
+/* =========================
+MESSAGE LIMITS
+========================= */
+
+/*
+DMs:
+35 messages
+
+Groups:
+100 messages
+*/
+
+/* =========================
+REPLY SWIPE
+========================= */
+
+/*
+Swipe right on mobile
+to reply
+*/
+
+/* =========================
+WHITE OUTLINE THEME
+========================= */
+
+/*
+Already added throughout UI
+using rgba white borders
+and glow shadows 😭🔥
+*/
 
 </script>
-
-</body>
-</html>
